@@ -8,11 +8,11 @@ class BookAdmin(admin.ModelAdmin):
     list_display_links = ('title',)
     list_per_page = 15
     list_filter = ('title', 'subtitle', 'author_id__name', 'is_available')
-    search_fields = ('title', 'subtitle', 'author', 'isbn')
+    search_fields = ('title', 'subtitle', 'author_id__name', 'isbn')
     list_editable = ('is_available',)
 
     def author_name(self, obj):
-        return obj.author.name
+        return obj.author_id
 
     author_name.short_description = 'Author'
     author_name.admin_order_field = 'book__author'

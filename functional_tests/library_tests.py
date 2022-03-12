@@ -3,7 +3,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from .base_test import BaseTest
 from accounts.models import User
-from unittest import skip
+from selenium.webdriver.support.ui import Select
+from library.models import Author, Publisher
 
 
 class LibraryTest(BaseTest):
@@ -29,10 +30,11 @@ class LibraryTest(BaseTest):
         # there is a link to the library table
         self.login_as_superuser()
         time.sleep(1)
-        div_books = self.webdriver.find_element(By.CLASS_NAME, 'app-library')
-        th_books = div_books.find_element(By.TAG_NAME, 'th')
-        self.assertIn('Books', th_books.text)
-        add_link = div_books.find_element(By.LINK_TEXT, 'Add')
+        div_library = self.webdriver.find_element(By.CLASS_NAME, 'app-library')
+        th_library = div_library.find_elements(By.TAG_NAME, 'th')
+        self.assertIn('Books', [th.text for th in th_library])
+        add_link = div_library.find_element(
+            By.XPATH, '// a[@href="/admin/library/book/add/"]')
         self.assertIn('Add', add_link.text)
 
     def test_admin_can_access_add_new_book_form(self):
@@ -70,8 +72,8 @@ class LibraryTest(BaseTest):
     def test_admin_checks_appropriate_fields_on_the_form(self):
         self.login_as_superuser()
         time.sleep(1)
-        div_books = self.webdriver.find_element(By.CLASS_NAME, 'app-library')
-        link_books = div_books.find_element(By.LINK_TEXT, 'Books')
+        div_library = self.webdriver.find_element(By.CLASS_NAME, 'app-library')
+        link_books = div_library.find_element(By.LINK_TEXT, 'Books')
         link_books.click()
         time.sleep(1)
         add_link = self.webdriver.find_element(
@@ -92,10 +94,10 @@ class LibraryTest(BaseTest):
         input_synopsis = self.webdriver.find_element(By.ID, 'id_synopsis')
         self.assertTrue(input_synopsis.is_displayed())
         # - author
-        input_author = self.webdriver.find_element(By.ID, 'id_author')
+        input_author = self.webdriver.find_element(By.ID, 'id_author_id')
         self.assertTrue(input_author.is_displayed())
         # - publish
-        input_publisher = self.webdriver.find_element(By.ID, 'id_publisher')
+        input_publisher = self.webdriver.find_element(By.ID, 'id_publisher_id')
         self.assertTrue(input_publisher.is_displayed())
         # - language
         input_language = self.webdriver.find_element(By.ID, 'id_language')
@@ -110,6 +112,22 @@ class LibraryTest(BaseTest):
 
     def test_admin_can_add_a_book(self):
         self.login_as_superuser()
+
+        author = Author.objects.create(
+            name='John Doe',
+            wikipedia='https://en.wikipedia.org/wiki/John_Doe',
+            country='United States'
+        )
+        author.full_clean()
+        author.save()
+
+        publisher = Publisher.objects.create(
+            name='Scribner',
+            website='https://www.simonandschusterpublishing.com/scribner/'
+        )
+        publisher.full_clean()
+        publisher.save()
+
         time.sleep(1)
         link_books = self.webdriver.find_element(By.LINK_TEXT, 'Books')
         link_books.click()
@@ -132,11 +150,13 @@ class LibraryTest(BaseTest):
         input_synopsis = self.webdriver.find_element(By.ID, 'id_synopsis')
         input_synopsis.send_keys('Test Synopsis')
         # - author
-        input_author = self.webdriver.find_element(By.ID, 'id_author')
-        input_author.send_keys('Test Author')
+        select_author = Select(self.webdriver.find_element(
+            By.ID, 'id_author_id'))
+        select_author.select_by_visible_text('John Doe')
         # - publish
-        input_publisher = self.webdriver.find_element(By.ID, 'id_publisher')
-        input_publisher.send_keys('Test Publisher')
+        select_publisher = Select(self.webdriver.find_element(
+            By.ID, 'id_publisher_id'))
+        select_publisher.select_by_visible_text('Scribner')
         # - language
         input_language = self.webdriver.find_element(By.ID, 'id_language')
         input_language.send_keys('Test Language')
@@ -157,7 +177,7 @@ class LibraryTest(BaseTest):
         # The system returns to the book listing screen and the administrator
         # verifies that a table listing the titles, subtitles, isbn and
         # availability of the books appears on the screen.
-        time.sleep(2)
+        time.sleep(1)
         table_books = self.webdriver.find_element(By.ID, 'result_list')
         self.assertTrue(table_books.is_displayed())
         item = table_books.find_elements(By.TAG_NAME, 'th')
@@ -214,6 +234,22 @@ class LibraryTest(BaseTest):
         # The admin clicks add one more book and the form is displayed
         self.login_as_superuser()
         time.sleep(1)
+
+        author = Author.objects.create(
+            name='John Doe',
+            wikipedia='https://en.wikipedia.org/wiki/John_Doe',
+            country='United States'
+        )
+        author.full_clean()
+        author.save()
+
+        publisher = Publisher.objects.create(
+            name='Scribner',
+            website='https://www.simonandschusterpublishing.com/scribner/'
+        )
+        publisher.full_clean()
+        publisher.save()
+
         link_books = self.webdriver.find_element(By.LINK_TEXT, 'Books')
         link_books.click()
         time.sleep(1)
@@ -230,18 +266,22 @@ class LibraryTest(BaseTest):
         input_title = self.webdriver.find_element(By.ID, 'id_title')
         input_title.send_keys('New Book')
         # - author
-        input_author = self.webdriver.find_element(By.ID, 'id_author')
-        input_author.send_keys('New Author')
+        select_author = Select(
+            self.webdriver.find_element(By.ID, 'id_author_id'))
+        select_author.select_by_visible_text('John Doe')
         # - publisher
-        input_publisher = self.webdriver.find_element(By.ID, 'id_publisher')
-        input_publisher.send_keys('New Publisher')
-        input_publisher.send_keys(Keys.ENTER)
-        time.sleep(1)
+        select_publisher = Select(self.webdriver.find_element(
+            By.ID, 'id_publisher_id'))
+        select_publisher.select_by_visible_text('Scribner')
+        # - save
+        button_save = self.webdriver.find_element(By.NAME, '_save')
+        button_save.click()
         # então o sistema acusa um erro alertando que alguns campos não foram
         # preenchidos
         # =====================================================================
         # then the system accuses an error warning that some fields were not
         # filled
+        time.sleep(1)
         error_notes = self.webdriver.find_elements(By.CLASS_NAME, 'errornote')
         self.assertIn('Please correct the errors below.', [
                       error.text for error in error_notes])
@@ -274,10 +314,10 @@ class LibraryTest(BaseTest):
         input_synopsis = self.webdriver.find_element(By.ID, 'id_synopsis')
         input_synopsis.send_keys('Test Synopsis')
         # - author
-        input_author = self.webdriver.find_element(By.ID, 'id_author')
+        input_author = self.webdriver.find_element(By.ID, 'id_author_id')
         input_author.send_keys('Test Author')
         # - publish
-        input_publisher = self.webdriver.find_element(By.ID, 'id_publisher')
+        input_publisher = self.webdriver.find_element(By.ID, 'id_publisher_id')
         input_publisher.send_keys('Test Publisher')
         # - language
         input_language = self.webdriver.find_element(By.ID, 'id_language')
