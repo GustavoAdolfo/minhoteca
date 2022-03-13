@@ -80,10 +80,10 @@ class LibraryTest(BaseTest):
         input_synopsis = self.webdriver.find_element(By.ID, 'id_synopsis')
         self.assertTrue(input_synopsis.is_displayed())
         # - author
-        input_author = self.webdriver.find_element(By.ID, 'id_author_id')
+        input_author = self.webdriver.find_element(By.ID, 'id_author')
         self.assertTrue(input_author.is_displayed())
         # - publish
-        input_publisher = self.webdriver.find_element(By.ID, 'id_publisher_id')
+        input_publisher = self.webdriver.find_element(By.ID, 'id_publisher')
         self.assertTrue(input_publisher.is_displayed())
         # - language
         input_language = self.webdriver.find_element(By.ID, 'id_language')
@@ -137,11 +137,11 @@ class LibraryTest(BaseTest):
         input_synopsis.send_keys('Test Synopsis')
         # - author
         select_author = Select(self.webdriver.find_element(
-            By.ID, 'id_author_id'))
+            By.ID, 'id_author'))
         select_author.select_by_visible_text('John Doe')
         # - publish
         select_publisher = Select(self.webdriver.find_element(
-            By.ID, 'id_publisher_id'))
+            By.ID, 'id_publisher'))
         select_publisher.select_by_visible_text('Scribner')
         # - language
         input_language = self.webdriver.find_element(By.ID, 'id_language')
@@ -253,11 +253,11 @@ class LibraryTest(BaseTest):
         input_title.send_keys('New Book')
         # - author
         select_author = Select(
-            self.webdriver.find_element(By.ID, 'id_author_id'))
+            self.webdriver.find_element(By.ID, 'id_author'))
         select_author.select_by_visible_text('John Doe')
         # - publisher
         select_publisher = Select(self.webdriver.find_element(
-            By.ID, 'id_publisher_id'))
+            By.ID, 'id_publisher'))
         select_publisher.select_by_visible_text('Scribner')
         # - save
         button_save = self.webdriver.find_element(By.NAME, '_save')
@@ -300,10 +300,10 @@ class LibraryTest(BaseTest):
         input_synopsis = self.webdriver.find_element(By.ID, 'id_synopsis')
         input_synopsis.send_keys('Test Synopsis')
         # - author
-        input_author = self.webdriver.find_element(By.ID, 'id_author_id')
+        input_author = self.webdriver.find_element(By.ID, 'id_author')
         input_author.send_keys('Test Author')
         # - publish
-        input_publisher = self.webdriver.find_element(By.ID, 'id_publisher_id')
+        input_publisher = self.webdriver.find_element(By.ID, 'id_publisher')
         input_publisher.send_keys('Test Publisher')
         # - language
         input_language = self.webdriver.find_element(By.ID, 'id_language')

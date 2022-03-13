@@ -31,9 +31,9 @@ class Book(models.Model):
     title = models.CharField(max_length=150)
     subtitle = models.CharField(max_length=150, blank=True)
     synopsis = models.TextField(blank=True)
-    author_id = models.ForeignKey(
+    author = models.ForeignKey(
         Author, on_delete=models.DO_NOTHING, default=0)
-    publisher_id = models.ForeignKey(
+    publisher = models.ForeignKey(
         Publisher, default=0, on_delete=models.DO_NOTHING)
     language = models.CharField(max_length=20)
     is_available = models.BooleanField(default=False)

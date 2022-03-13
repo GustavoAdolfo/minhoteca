@@ -143,3 +143,5 @@ class UserAdminTest(BaseTest):
         self.assertIn(
             'Please enter the correct email and password for a staff account. '
             'Note that both fields may be case-sensitive.', errornote.text)
+
+# from unittest.mock import Mock

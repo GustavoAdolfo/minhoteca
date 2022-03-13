@@ -60,8 +60,8 @@ class BookModelTests(TestCase):
             is_available=True,
             isbn=123456789
         )
-        book.author_id = author
-        book.publisher_id = publisher
+        book.author = author
+        book.publisher = publisher
         book.full_clean()
         book.save()
         list_of_books = Book.objects.all()
