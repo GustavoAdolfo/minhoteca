@@ -9,7 +9,7 @@ class AuthorModelTests(TestCase):
             name='John Doe',
             wikipedia='https://en.wikipedia.org/wiki/John_Doe',
             country='United States',
-            picture_url='https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Francis_Scott_Fitzgerald_1937_June_4_%281%29_%28photo_by_Carl_van_Vechten%29.jpg/800px-Francis_Scott_Fitzgerald_1937_June_4_%281%29_%28photo_by_Carl_van_Vechten%29.jpg'
+            picture_url='https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Francis_Scott_Fitzgerald_1937_June_4_%281%29_%28photo_by_Carl_van_Vechten%29.jpg/800px-Francis_Scott_Fitzgerald_1937_June_4_%281%29_%28photo_by_Carl_van_Vechten%29.jpg'  # noqa: E501
         )
         author.full_clean()
         author.save()

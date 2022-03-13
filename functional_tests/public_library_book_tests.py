@@ -1,9 +1,5 @@
-import time
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from .base_test import BaseTest
-from selenium.webdriver.support.ui import Select
-from library.models import Author, Publisher
 from factories.library_factories import BookFactory
 
 

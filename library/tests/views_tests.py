@@ -1,5 +1,3 @@
-from django.http import Http404
-from django.shortcuts import render
 from django.urls import resolve
 from django.test import TestCase
 from django.template.loader import render_to_string
