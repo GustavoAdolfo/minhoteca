@@ -8,11 +8,11 @@ from factories import library_factories
 class LibraryViewsTests(TestCase):
 
     def test_url_resolves_to_books_index_view(self):
-        found = resolve('/books/')
+        found = resolve('/')
         self.assertEqual(found.func, index)
 
     def test_index_view_return_correct_html(self):
-        response = self.client.get('/books/')
+        response = self.client.get('/')
         self.assertTemplateUsed(response, 'library_index.html')
 
         html = response.content.decode('utf8')
@@ -21,7 +21,7 @@ class LibraryViewsTests(TestCase):
 
     def test_book_homepage_returns_books(self):
         library_factories.BookFactory.create_batch(10)
-        response = self.client.get('/books/')
+        response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['books']), 10)
         self.assertIn('Book 1', response.content.decode('utf8'))

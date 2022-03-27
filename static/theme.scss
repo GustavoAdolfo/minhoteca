@@ -1,0 +1,30 @@
+@import './bootstrap/scss/bootstrap';
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+.content-page {
+    min-height: 100%;
+    footer {
+        font-size: 0.75em;
+    }
+}
+
+.navbar {
+    .navbar-brand {
+        img {
+            max-height: 80px;
+        }
+    }
+}
+
+.navbar-expand-md {
+    .navbar-nav {
+        .nav-link {
+            padding-right: initial;
+        }
+    }
+}
+

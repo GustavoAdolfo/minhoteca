@@ -1,9 +1,7 @@
-<html>
-    <head>
-        <title>Livros Disponíveis</title>
-    </head>
-    <body>
-        <h1>Livros Disponíveis</h1>
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Minhoteca</h1>
 
         <table id="table-book-list">
             <thead>
@@ -21,5 +19,4 @@
                 {% endfor %}
             </tbody>
         </table>
-    </body>
-</html>
+{% endblock %}
