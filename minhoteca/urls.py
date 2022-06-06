@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from library import urls as library_urls
+from .views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(library_urls)),
+    path('', index),
+    path('books/', include('library.urls', namespace='library')),
+    path('accounts/', include('accounts.urls', namespace='accounts')),
 ]

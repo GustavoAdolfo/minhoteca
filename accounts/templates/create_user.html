@@ -1,0 +1,5 @@
+<form action="/accounts/create/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Cadastrar" class="btn btn-primary"/>
+</form>

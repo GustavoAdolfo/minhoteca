@@ -38,6 +38,7 @@ class Book(models.Model):
     language = models.CharField(max_length=20)
     is_available = models.BooleanField(default=False)
     isbn = models.IntegerField()
+    picture_url = models.URLField(blank=True, max_length=500)
 
     def __str__(self):
         if self.subtitle:

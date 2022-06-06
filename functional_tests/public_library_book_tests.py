@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from .base_test import BaseTest
 from factories.library_factories import BookFactory
+import time
 
 
 class LibraryTest(BaseTest):
@@ -11,7 +12,7 @@ class LibraryTest(BaseTest):
         # =====================================================
         # A site visitor decides to consult the public list of
         # available books.
-        self.webdriver.get(self.live_server_url + '/books/')
+        self.webdriver.get(self.live_server_url + '/books')
         # O visitante identifica um título na página onde se lê
         # "Livros Disponíveis".
         # ======================================================
@@ -43,9 +44,10 @@ class LibraryTest(BaseTest):
         # available books and verifies that there are 10 books
         # displayed in a table with the title and author columns.
         BookFactory.create_batch(10)
-        self.webdriver.get(self.live_server_url + '/books/')
+        self.webdriver.get(self.live_server_url + '/books')
         table = self.webdriver.find_element(By.ID, 'table-book-list')
         tbody = table.find_element(By.TAG_NAME, 'tbody')
+        time.sleep(5)
         self.assertTrue(len(tbody.find_elements(By.TAG_NAME, 'tr')) == 10)
         self.assertIn('Book 1', self.webdriver.page_source)
         self.assertIn('Author 1', self.webdriver.page_source)

@@ -60,7 +60,10 @@ ROOT_URLCONF = 'minhoteca.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            Path.joinpath(BASE_DIR, 'html'),
+            Path.joinpath(BASE_DIR, 'accounts'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

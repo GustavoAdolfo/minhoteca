@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Minhoteca{% endblock %}
+
+{% block content %}
+<div class="container" id="front">
+    <div class="row justify-content-md-center">
+        <div class="col col-sm-12 col-md-6" style="border: 1px solid blue">
+            Apresentação
+
+            <div class="row d-lg-none">
+                <div class="col col-12">
+                    <button class="btn btn-primary">Cadastre-se</button>
+                </div>
+            </div>
+        </div>
+        <div class="col d-none d-lg-block col-md-6" style="border: 1px solid darkgreen">
+            {% include 'create_user.html' %}
+        </div>
+    </div>
+    <div class="row justify-content-md-center" style="border: 1px solid orangered">
+        <div class="col col-12">
+            Anúncios
+        </div>
+    </div>
+</div>
+{% endblock %}

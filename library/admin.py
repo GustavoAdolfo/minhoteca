@@ -7,15 +7,15 @@ class BookAdmin(admin.ModelAdmin):
                     'is_available', 'isbn')
     list_display_links = ('title',)
     list_per_page = 15
-    list_filter = ('title', 'subtitle', 'author_id__name', 'is_available')
+    list_filter = ('is_available', 'title', 'author_id__name')
     search_fields = ('title', 'subtitle', 'author_id__name', 'isbn')
     list_editable = ('is_available',)
 
     def author_name(self, obj):
-        return obj.author_id
+        return obj.author.name
 
     author_name.short_description = 'Author'
-    author_name.admin_order_field = 'book__author'
+    author_name.admin_order_field = 'author_id__name'
 
 
 admin.site.register(Book, BookAdmin)

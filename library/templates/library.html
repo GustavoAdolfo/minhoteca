@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Livros Disponíveis{% endblock %}
+
+{% block content %}
+<h1>Livros Disponíveis</h1>
+
+<table id="table-book-list" class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Autor</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+        <tr>
+            <td><a href="#" class="book-link">{{ book.title }}</a></td>
+            <td><a href="#" class="author-link">{{ book.author }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

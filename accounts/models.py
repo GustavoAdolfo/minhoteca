@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+import datetime
 
 
 class UserManager(BaseUserManager):
@@ -43,6 +44,10 @@ class User(AbstractUser):
     is_superuser = models.BooleanField(default=False)
     email_confirmed = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
+    use_term_accepted_at = models.DateTimeField(
+        null=False,
+        blank=True,
+        auto_now_add=True)
 
     REQUIRED_FIELDS = []
     USERNAME_FIELD = 'email'
