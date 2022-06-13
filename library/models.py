@@ -42,7 +42,7 @@ class Book(models.Model):
 
     def __str__(self):
         if self.subtitle:
-            return '{} - {}'.format(self.title, self.subtitle)
+            return f'{self.title} - {self.subtitle}'
 
         return self.title
 

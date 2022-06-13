@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
-import datetime
 
 
 class UserManager(BaseUserManager):
@@ -12,11 +11,12 @@ class UserManager(BaseUserManager):
             raise ValueError('Users must have a valid email address.')
         if not password:
             raise ValueError('Users must have a valid password.')
-
+        
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
-        user.save(using=self._db)
+        # user.save(using=self._db)
+        user.save()
         return user
 
     def create_user(self, email, password, **extra_fields):
@@ -36,7 +36,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractUser):
+class MinhotecaUser(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=128)

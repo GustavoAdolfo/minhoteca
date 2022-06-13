@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container" id="front">
     <div class="row justify-content-md-center">
-        <div class="col col-sm-12 col-md-6" style="border: 1px solid blue">
+        <div class="col col-sm-12 col-md-7" style="border: 1px solid blue">
             Apresentação
 
             <div class="row d-lg-none">
@@ -14,8 +14,12 @@
                 </div>
             </div>
         </div>
-        <div class="col d-none d-lg-block col-md-6" style="border: 1px solid darkgreen">
+        <div class="col d-none d-lg-block col-md-5 d-flex justify-content-center" style="border: 1px solid darkgreen">
+            {% if not request.user.is_authenticated %}
             {% include 'create_user.html' %}
+            {% else %}
+            <h3>Estatísticas</h3>
+            {% endif %}
         </div>
     </div>
     <div class="row justify-content-md-center" style="border: 1px solid orangered">

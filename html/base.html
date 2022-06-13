@@ -1,74 +1,74 @@
 {% load static %}
 {% load sass_tags %}
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Minhoteca - {% block title %}{% endblock %}</title>
-        <meta name="description" content="Documentation and examples for common text utilities to control alignment, wrapping, weight, and more.">
-        <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
 
-        <!-- Favicons -->
-        <link rel="apple-touch-icon" href="{% static 'imgs/apple-touch-icon.png' %}" sizes="180x180">
-        <link rel="icon" href="{% static 'imgs/favicon-32x32.png'%}" sizes="32x32" type="image/png">
-        <link rel="icon" href="{% static 'imgs/favicon-16x16.png'%}" sizes="16x16" type="image/png">
-        <link rel="icon" href="{% static 'imgs/favicon.ico' %}">
-        <meta name="theme-color" content="#c9c2c3">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Minhoteca - {% block title %}{% endblock %}</title>
+    <meta name="description"
+        content="Documentation and examples for common text utilities to control alignment, wrapping, weight, and more.">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
 
-        <link href="{% sass_src 'theme.scss' %}" rel="stylesheet" type="text/css">
-    </head>
-    <body>
-        <div class="content-page d-flex align-items-stretch flex-column bd-highlight mb-3">
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="{% static 'imgs/apple-touch-icon.png' %}" sizes="180x180">
+    <link rel="icon" href="{% static 'imgs/favicon-32x32.png'%}" sizes="32x32" type="image/png">
+    <link rel="icon" href="{% static 'imgs/favicon-16x16.png'%}" sizes="16x16" type="image/png">
+    <link rel="icon" href="{% static 'imgs/favicon.ico' %}">
+    <meta name="theme-color" content="#c9c2c3">
 
-            <div class="container-flex d-flex flex-column flex-md-row flex-grow-1">
-                <nav class="navbar navbar-expand-md navbar-light d-flex flex-md-column align-items-start">
-                    <a class="navbar-brand" href="#">
-                        <img src="{% static 'imgs/minhoteca.svg'%}" alt="Minhoteca" title="Início">
-                    </a>
+    <link href="{% sass_src 'theme.scss' %}" rel="stylesheet" type="text/css">
+</head>
 
-                    <button
-                        class="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-toggle="collapse"
-                        data-bs-target="#navbarDefaultMenu"
-                        data-target="#navbarDefaultMenu"
-                        aria-controls="navbarDefaultMenu"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                    >
+<body>
+    <div class="content-page d-flex align-items-stretch flex-column bd-highlight mb-3">
+
+        <div class="container-flex d-flex flex-column flex-md-row flex-grow-1">
+            <nav class="navbar navbar-expand-md navbar-light d-flex flex-md-column align-items-start">
+                <a class="navbar-brand" href="/">
+                    <img src="{% static 'imgs/minhoteca.svg'%}" alt="Minhoteca" title="Início">
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-toggle="collapse"
+                    data-bs-target="#navbarDefaultMenu" data-target="#navbarDefaultMenu"
+                    aria-controls="navbarDefaultMenu" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse w-100" id="navbarDefaultMenu">
+                    <ul class="navbar-nav w-100 d-flex flex-md-column text-center text-md-end">
+                        <li><a href="#" class="nav-link btn">Livros</a></li>
+                        <li><a href="#" class="nav-link btn">Autores</a></li>
+                        {% if not user.is_authenticated %}
+                        <li><a href="{% url 'accounts:login' %}" class="nav-link btn">Entrar</a></li>
+                        {% else %}
+                        <li><a href="{% url 'accounts:logout' %}" class="nav-link btn">Sair</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+            <main id="main-content" class="p-2 flex-grow-1">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                    {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
                     </button>
+                </div>
+                {% endfor %}
+                {% endif %}
 
-                    <div class="collapse navbar-collapse w-100" id="navbarDefaultMenu">
-                        <ul class="navbar-nav w-100 d-flex flex-md-column text-center text-md-end">
-                            <li><a href="#" class="nav-link btn">Livros</a></li>
-                            <li><a href="#" class="nav-link btn">Autores</a></li>
-                            <li><a href="#" class="nav-link btn">Entrar</a></li>
-                        </ul>
-                    </div>
-                </nav>
-                <main id="main-content" class="p-2 flex-grow-1">
-                    {% if messages %}
-                    {% for message in messages %}
-                    <div class="alert {{message.tags}} alert-dismissible fade show" role="alert">
-                        {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-
-                    {% block content %}{% endblock %}
-                </main>
-            </div>
-
-            <footer class="footer h-60 p-2 mt-4 border-top border-dark">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </footer>
+                {% block content %}{% endblock %}
+            </main>
         </div>
-        <script src="{% static 'bootstrap/js/jquery-3.6.0.min.js' %}"></script>
-        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-    </body>
+
+        <footer class="footer h-60 p-2 mt-4 border-top border-dark">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        </footer>
+    </div>
+    <script src="{% static 'bootstrap/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+
 </html>

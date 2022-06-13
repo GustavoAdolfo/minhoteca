@@ -1,13 +1,13 @@
 from selenium.webdriver.common.by import By
 from .base_test import BaseTest
-from accounts.models import User
+from accounts.models import MinhotecaUser
 import time
 
 
 class UserAdminTest(BaseTest):
 
     def create_superuser(self, username, password):
-        user = User.objects.create(email=username)
+        user = MinhotecaUser.objects.create(email=username)
         user.set_password(password)
         user.is_staff = True
         user.is_superuser = True
@@ -49,7 +49,7 @@ class UserAdminTest(BaseTest):
 
     def test_can_login_with_valid_credentials(self):
         _username = 'minhoteca@test.net'
-        _password = User.objects.make_random_password()
+        _password = MinhotecaUser.objects.make_random_password()
         self.create_superuser(_username, _password)
 
         # O usuário administrador preenche o formulário de login e clica no
@@ -83,9 +83,9 @@ class UserAdminTest(BaseTest):
         # login and thought that he could also access the administrative area
         # of minhoteca.
         _username = 'minhoteca@test.net'
-        _password = User.objects.make_random_password()
+        _password = MinhotecaUser.objects.make_random_password()
         _invalid_username = 'minhoteca@test.com'
-        _invalid_password = User.objects.make_random_password()
+        _invalid_password = MinhotecaUser.objects.make_random_password()
         self.create_superuser(_username, _password)
 
         # O usuário comum preenche o formulário de login e clica no botão.
@@ -114,8 +114,8 @@ class UserAdminTest(BaseTest):
 
     def test_cant_login_with_VALID_user_but_wrong_password(self):
         _username = 'minhoteca@test.net'
-        _password = User.objects.make_random_password()
-        _invalid_password = User.objects.make_random_password()
+        _password = MinhotecaUser.objects.make_random_password()
+        _invalid_password = MinhotecaUser.objects.make_random_password()
         self.create_superuser(_username, _password)
 
         # O usuário comum é mal intencionado e tendo visto o email do usuário
