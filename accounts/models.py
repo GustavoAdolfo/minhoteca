@@ -48,6 +48,16 @@ class MinhotecaUser(AbstractUser):
         null=False,
         blank=True,
         auto_now_add=True)
+    contact_phone = models.CharField(max_length=11, null=True)
+    zip_code = models.CharField(max_length=8, null=True)
+    address = models.CharField(max_length=100, null=True)
+    address_number = models.CharField(max_length=10, null=True)
+    address_complement = models.CharField(max_length=50, null=True)
+    neighborhood = models.CharField(max_length=50, null=True)
+    city = models.CharField(max_length=50, null=True)
+    state = models.CharField(max_length=2, null=True, default='SP')
+    can_borrow = models.BooleanField(default=False)
+    
 
     REQUIRED_FIELDS = []
     USERNAME_FIELD = 'email'
@@ -59,3 +69,5 @@ class MinhotecaUser(AbstractUser):
 
     def get_username(self):
         return self.email
+
+

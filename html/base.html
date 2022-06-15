@@ -42,6 +42,7 @@
                         {% if not user.is_authenticated %}
                         <li><a href="{% url 'accounts:login' %}" class="nav-link btn">Entrar</a></li>
                         {% else %}
+                        <li><a href="{% url 'accounts:profile' %}" class="nav-link btn">Perfil</a></li>
                         <li><a href="{% url 'accounts:logout' %}" class="nav-link btn">Sair</a></li>
                         {% endif %}
                     </ul>

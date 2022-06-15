@@ -8,12 +8,13 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
-from django.contrib import messages
+from django.contrib import messages, auth
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 import environ
 from .tokens import account_activation_token
-from .forms import CreateUserForm
+from .forms import CreateUserForm, UserProfileForm
 from .models import MinhotecaUser
 
 
@@ -106,3 +107,60 @@ def logoff(request):
     logout(request)
     request.session.flush()
     return HttpResponseRedirect('/')
+
+def _get_profile_level(request):
+    profile_complete = 8
+    profile_weight = 0
+    user = auth.get_user(request)
+    profile_weight += 1 if user.first_name else 0
+    profile_weight += 1 if user.contact_phone else 0
+    profile_weight += 1 if user.email else 0
+    profile_weight += 1 if user.zip_code else 0
+    profile_weight += 1 if user.address else 0
+    profile_weight += 1 if user.city else 0
+    profile_weight += 1 if user.address_number else 0
+    profile_weight += 1 if user.state else 0
+    return (100 * profile_weight) // profile_complete
+
+@login_required(login_url='/accounts/login/')
+def profile(request):
+    """Mostra o perfil do usuário."""
+    profile_level = _get_profile_level(request)
+    profile_form = UserProfileForm()
+    context = { 'profile_level': profile_level, 'profile_form': profile_form }
+    return render(request, 'profile.html', context)
+
+@login_required(login_url='/accounts/login/')
+def edit_profile(request):
+    """Salvar o perfil do usuário."""
+    if request.method != 'POST':
+        return HttpResponseRedirect(reverse('accounts:profile'))
+    
+    profile_form = UserProfileForm(request.POST)
+    try:
+        if profile_form.is_valid():
+            _ = profile_form.save()
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                'Perfil atualizado com sucesso.')
+            return HttpResponseRedirect(reverse('accounts:profile'))
+        else:
+            messages.add_message(
+                request,
+                messages.ERROR,
+                'Os dados informados não são válidos.')
+            profile_level = _get_profile_level(request)
+            context = {
+                'profile_level': profile_level,
+                'profile_form': profile_form
+            }
+            return render(request, 'profile.html', context)
+    except Exception as error:
+        log.error(error)
+        messages.warning(
+            request,
+            ('Ocorreu uma falha ao atualizar os dados. '+
+            'Por favor tente novamente mais tarde.')
+        )
+        return HttpResponseRedirect('/')

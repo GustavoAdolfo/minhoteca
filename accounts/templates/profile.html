@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Minhoteca - Perfil do Usuário{% endblock %}
+{% block content %}
+<section id="profile-section">
+    <div class="container">
+        <h4>Força do perfil em {{profile_level}}%</h4>
+        </h4>
+        <form action="{% url 'accounts:edit_profile' %}" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group
+                        {% if form.first_name.errors %}
+                            has-error
+                        {% endif %}
+                    ">
+                        <label for="first_name">Nome</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name"
+                            value="{{ form.first_name.value }}">
+                        {% if profile_form.first_name.errors %}
+                        <span class="help-block">{{ profile_form.first_name.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group
+                        {% if form.last_name.errors %}
+                            has-error
+                        {% endif %}
+                    ">
+                        <label for="last_name">Sobrenome</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name"
+                            value="{{ form.last_name.value }}">
+                        {% if profile_form.last_name.errors %}
+                        <span class="help-block">{{ profile_form.last_name.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
