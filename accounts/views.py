@@ -5,7 +5,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.html import strip_tags
 from django.http import HttpResponseRedirect
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages, auth
@@ -108,10 +108,9 @@ def logoff(request):
     request.session.flush()
     return HttpResponseRedirect('/')
 
-def _get_profile_level(request):
+def _get_profile_level(user):
     profile_complete = 8
     profile_weight = 0
-    user = auth.get_user(request)
     profile_weight += 1 if user.first_name else 0
     profile_weight += 1 if user.contact_phone else 0
     profile_weight += 1 if user.email else 0
@@ -123,12 +122,53 @@ def _get_profile_level(request):
     return (100 * profile_weight) // profile_complete
 
 @login_required(login_url='/accounts/login/')
-def profile(request):
+def get_profile(request):
     """Mostra o perfil do usuário."""
-    profile_level = _get_profile_level(request)
-    profile_form = UserProfileForm()
-    context = { 'profile_level': profile_level, 'profile_form': profile_form }
-    return render(request, 'profile.html', context)
+    user = auth.get_user(request)
+    try:
+        user_profile = get_object_or_404(MinhotecaUser, id=user.id)
+        profile_level = _get_profile_level(user_profile)
+        profile_form = UserProfileForm(instance=user_profile)
+        context = { 'profile_level': profile_level, 'profile_form': profile_form }
+        return render(request, 'profile.html', context)
+    except Exception as error:
+        log.error(error)
+        messages.warning(
+            request,
+            ('Ocorreu um erro ao carregar seu perfil. '+
+            'Por favor tente novamente mais tarde.')
+        )
+        return HttpResponseRedirect('/')
+
+
+def _update_profile(request, current_profile):
+    profile_form = UserProfileForm(
+        instance=current_profile,
+        data=request.POST) #, files=request.FILES)
+    if profile_form.is_valid():
+        current_profile = profile_form.save(commit=False)
+        current_profile.save()
+        return None
+    
+    return profile_form
+
+def _create_new_profile(request):
+    profile_form = UserProfileForm(request.POST) #, request.FILES)
+    if profile_form.is_valid():
+        new_profile = profile_form.save(commit=False)
+        new_profile.can_borrow = \
+            len(new_profile.first_name.strip()) > 0 and \
+                len(new_profile.contact_phone.strip()) > 0 and \
+                    len(new_profile.last_name.strip()) > 0 and \
+                        len(new_profile.zip_code.strip()) > 0 and \
+                            len(new_profile.address.strip()) > 0 and \
+                                len(new_profile.city.strip()) > 0 and \
+                                    len(new_profile.address_number.strip()) > 0 and \
+                                        len(new_profile.state.strip()) > 0
+        new_profile.save()
+        # # Get the current instance object to display in the template
+        # img_obj = form.instance
+        # # return render(request, 'index.html', {'form': form, 'img_obj': img_obj})
 
 @login_required(login_url='/accounts/login/')
 def edit_profile(request):
@@ -136,29 +176,35 @@ def edit_profile(request):
     if request.method != 'POST':
         return HttpResponseRedirect(reverse('accounts:profile'))
     
-    profile_form = UserProfileForm(request.POST)
+    user = auth.get_user(request)
     try:
-        if profile_form.is_valid():
-            _ = profile_form.save()
-            messages.add_message(
-                request,
-                messages.SUCCESS,
-                'Perfil atualizado com sucesso.')
-            return HttpResponseRedirect(reverse('accounts:profile'))
+        if MinhotecaUser.objects.filter(id=user.id).exists():
+            profile = get_object_or_404(MinhotecaUser, id=user.id)
+            update_form = _update_profile(request, profile)
+            if not update_form:
+                messages.add_message(request, messages.SUCCESS,
+                                        'Perfil atualizado com sucesso!')
+                return HttpResponseRedirect('/')
+            else:
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    'Os dados informados não são válidos.')
+                profile_form = UserProfileForm(request.POST) #, request.FILES)
+                profile_level = _get_profile_level(profile)
+                context = {
+                    'profile_level': profile_level,
+                    'profile_form': profile_form
+                }
+                return render(request, 'profile.html', context)
         else:
-            messages.add_message(
-                request,
-                messages.ERROR,
-                'Os dados informados não são válidos.')
-            profile_level = _get_profile_level(request)
-            context = {
-                'profile_level': profile_level,
-                'profile_form': profile_form
-            }
-            return render(request, 'profile.html', context)
+            _create_new_profile(request)
+            messages.add_message(request, messages.SUCCESS,
+                                    'Perfil criado com sucesso!')
+            return HttpResponseRedirect('/')
     except Exception as error:
         log.error(error)
-        messages.warning(
+        messages.error(
             request,
             ('Ocorreu uma falha ao atualizar os dados. '+
             'Por favor tente novamente mais tarde.')

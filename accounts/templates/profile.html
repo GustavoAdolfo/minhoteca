@@ -1,42 +1,255 @@
 {% extends 'base.html' %}
 {% block title %}Minhoteca - Perfil do Usuário{% endblock %}
 {% block content %}
-<section id="profile-section">
-    <div class="container">
-        <h4>Força do perfil em {{profile_level}}%</h4>
-        </h4>
+<section id="profile-section" class="container">
+
+    <header class="p-4 mb-4 border">
+        <h1>Perfil de Usuário</h1>
+        <p class="mb-4 text-secondary">Preencha os dados de perfil para que possamos formalizar os empréstimos
+            podendo fazer a entrega e recuperação dos livros adequadamente.</p>
+
+        <div class="col-12 col-md-8">
+            <h6 class="">Força do perfil:</h6>
+            <div class="progress bg-secondary">
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{profile_level}}%;"
+                    aria-valuenow="{{profile_level}}%" aria-valuemin="0" aria-valuemax="100">{{profile_level}}%
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="p-4 mt-3 border">
+        <p class="small">Reveja os <a href="#">termos de uso</a> e a <a href="#">política de privacidade</a>.</p>
         <form action="{% url 'accounts:edit_profile' %}" method="post">
+            {% csrf_token %}
+
+            <input type="hidden" name="{{profile_form.id.name}}" id="{{profile_form.id.name}}"
+                value="{{ user.id|default_if_none:"" }}" />
+
             <div class="row">
                 <div class="col-md-6">
-                    <div class="form-group
-                        {% if form.first_name.errors %}
-                            has-error
+                    <div class="form-group">
+                        <label for="{{profile_form.email.name}}">{{profile_form.email.label}}</label>
+                        <input type="email" class="form-control
+                        {% if profile_form.email.errors %}
+                        border border-danger
+                        {% endif %}" id="{{profile_form.email.name}}" name="{{profile_form.email.name}}"
+                            value="{{ profile_form.email.value|default_if_none:"" }}">
+                        {% if profile_form.email.errors %}
+                        <span class="help-block
+                        {% if profile_form.email.errors %}
+                            text-danger small
                         {% endif %}
-                    ">
-                        <label for="first_name">Nome</label>
-                        <input type="text" class="form-control" id="first_name" name="first_name"
-                            value="{{ form.first_name.value }}">
-                        {% if profile_form.first_name.errors %}
-                        <span class="help-block">{{ profile_form.first_name.errors.0 }}</span>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group
-                        {% if form.last_name.errors %}
-                            has-error
-                        {% endif %}
-                    ">
-                        <label for="last_name">Sobrenome</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name"
-                            value="{{ form.last_name.value }}">
-                        {% if profile_form.last_name.errors %}
-                        <span class="help-block">{{ profile_form.last_name.errors.0 }}</span>
+                    ">{{ profile_form.email.errors.0 }}</span>
                         {% endif %}
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{profile_form.first_name.name}}">Nome</label>
+                        <input type="text" class="form-control
+                        {% if profile_form.first_name.errors %}
+                        border border-danger
+                        {% endif %}" id="{{profile_form.first_name.name}}" name="{{profile_form.first_name.name}}"
+                            value="{{ profile_form.first_name.value|default_if_none:"" }}">
+                        {% if profile_form.first_name.errors %}
+                        <span class="help-block
+                        {% if profile_form.first_name.errors %}
+                            text-danger small
+                        {% endif %}
+                    ">{{ profile_form.first_name.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{profile_form.last_name.name}}">Sobrenome</label>
+                        <input type="text" class="form-control
+                        {% if profile_form.last_name.errors %}
+                        border border-danger
+                        {% endif %}" id="{{profile_form.last_name.name}}" name="{{profile_form.last_name.name}}"
+                            value="{{ profile_form.last_name.value|default_if_none:"" }}">
+                        {% if profile_form.last_name.errors %}
+                        <span class="help-block
+                        {% if profile_form.last_name.errors %}
+                            text-danger small
+                        {% endif %}
+                    ">{{ profile_form.last_name.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 col-md-2">
+                    <div class=" form-group">
+                        <label for=" {{profile_form.contact_phone.name}}">{{profile_form.contact_phone.label}}</label>
+                        <input type="text" class="form-control
+                        {% if profile_form.contact_phone.errors %}
+                        border border-danger
+                        {% endif %}" id="{{profile_form.contact_phone.name}}"
+                            name="{{profile_form.contact_phone.name}}"
+                            value="{{ profile_form.contact_phone.value|default_if_none:"" }}">
+                        {% if profile_form.contact_phone.errors %}
+                        <span class="help-block
+                         {% if profile_form.contact_phone.errors %} text-danger small {% endif %}
+                         ">{{ profile_form.contact_phone.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="form-group">
+                        <label for="{{profile_form.zip_code.name}}">{{profile_form.zip_code.label}}</label>
+                        <input type="text" class="form-control
+                        {% if profile_form.zip_code.errors %}
+                        border border-danger
+                        {% endif %}" id="{{profile_form.zip_code.name}}" name="{{profile_form.zip_code.name}}"
+                            value="{{ profile_form.zip_code.value|default_if_none:"" }}">
+                        {% if profile_form.zip_code.errors %}
+                        <span class="help-block
+                        {% if profile_form.zip_code.errors %}
+                            text-danger small
+                        {% endif %}
+                    ">{{ profile_form.zip_code.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label for="{{profile_form.address.name}}">{{profile_form.address.label}}</label>
+                        <input type="text" class="form-control
+                        {% if profile_form.address.errors %}
+                        border border-danger
+                        {% endif %}" id="{{profile_form.address.name}}" name="{{profile_form.address.name}}"
+                            value="{{ profile_form.address.value|default_if_none:"" }}">
+                        {% if profile_form.address.errors %}
+                        <span class="help-block
+                        {% if profile_form.address.errors %}
+                            text-danger small
+                        {% endif %}
+                    ">{{ profile_form.address.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-4 col-md-2">
+                    <div class="form-group">
+                        <label for="{{profile_form.address_number.name}}">{{profile_form.address_number.label}}</label>
+                        <input type="text" class="form-control
+                        {% if profile_form.address_number.errors %}
+                        border border-danger
+                        {% endif %}" id="{{profile_form.address_number.name}}"
+                            name="{{profile_form.address_number.name}}"
+                            value="{{ profile_form.address_number.value|default_if_none:"" }}">
+                        {% if profile_form.address_number.errors %}
+                        <span class="help-block
+                        {% if profile_form.address_number.errors %}
+                            text-danger small
+                        {% endif %}
+                    ">{{ profile_form.address_number.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-3">
+                    <div class="form-group">
+                        <label
+                            for="{{profile_form.address_complement.name}}">{{profile_form.address_complement.label}}</label>
+                        <input type="text" class="form-control
+                        {% if profile_form.address_complement.errors %}
+                        border border-danger
+                        {% endif %}" id="{{profile_form.address_complement.name}}"
+                            name="{{profile_form.address_complement.name}}"
+                            value="{{ profile_form.address_complement.value|default_if_none:"" }}">
+                        {% if profile_form.address_complement.errors %}
+                        <span class="help-block
+                        {% if profile_form.address_complement.errors %}
+                            text-danger small
+                        {% endif %}
+                    ">{{ profile_form.address_complement.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="form-group">
+                        <label for="{{profile_form.neighborhood.name}}">{{profile_form.neighborhood.label}}</label>
+                        <input type="text" class="form-control
+                        {% if profile_form.neighborhood.errors %}
+                        border border-danger
+                        {% endif %}
+                        " id="{{profile_form.neighborhood.name}}" name="{{profile_form.neighborhood.name}}"
+                            value="{{ profile_form.neighborhood.value|default_if_none:"" }}">
+                        <span class="help-block
+                            {% if profile_form.neighborhood.errors %}
+                            text-danger small
+                            {% endif %}">{{ profile_form.neighborhood.errors.0 }}</span>
+
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="form-group">
+                        <label for="{{profile_form.city.name}}">{{profile_form.city.label}}</label>
+                        <input type="text" class="form-control
+                        {% if profile_form.city.errors %}
+                        border border-danger
+                        {% endif %}
+                        " id="{{profile_form.city.name}}" name="{{profile_form.city.name}}"
+                            value="{{ profile_form.city.value|default_if_none:"" }}">
+                        {% if profile_form.city.errors %}
+                        <span class="help-block
+                        {% if profile_form.city.errors %}
+                        text-danger small
+                        {% endif %}">{{ profile_form.city.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-4 col-md-2">
+                    <div class="form-group">
+                        <label for="{{profile_form.state.name}}">{{profile_form.state.label}}</label>
+                        <input type="text" class="form-control" id="{{profile_form.state.name}}"
+                            name="{{profile_form.state.name}}"
+                            value="{{ profile_form.state.value|default_if_none:"" }}">
+                        {% if profile_form.state.errors %}
+                        <span class="help-block 
+                        {% if profile_form.state.errors %}
+                            text-danger small
+                        {% endif %}
+                        ">{{ profile_form.state.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-12 text-center">
+                    <button class="btn btn-primary" type="submit">Salvar</button>
+                </div>
+            </div>
         </form>
     </div>
+
+    <div class="p-4 mt-3 border">
+        <h4>Redefinir Senha</h4>
+    </div>
 </section>
+<script>
+    document.getElementById('{{profile_form.zip_code.name}}').addEventListener('blur', function (e) {
+        var zip_code = document.getElementById('{{profile_form.zip_code.name}}').value;
+        var url = 'https://viacep.com.br/ws/' + zip_code + '/json/';
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                document.getElementById('{{profile_form.address.name}}').value = response.logradouro;
+                document.getElementById('{{profile_form.neighborhood.name}}').value = response.bairro;
+                document.getElementById('{{profile_form.city.name}}').value = response.localidade;
+                document.getElementById('{{profile_form.state.name}}').value = response.uf;
+                document.getElementById('{{profile_form.address_number.name}}').focus();
+            }
+        };
+        xhr.send();
+    });
+</script>
 {% endblock %}

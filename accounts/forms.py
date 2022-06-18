@@ -1,4 +1,5 @@
 from django import forms
+from django.forms.models import ModelForm
 from django.contrib.auth.forms import PasswordChangeForm as PdwChangeForm
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import get_user_model
@@ -7,6 +8,9 @@ from .models import MinhotecaUser as MinhotecaUser
 
 
 class CreateUserForm(UserCreationForm):
+    # recaptcha = CaptchaField()
+    # site key = 6LfI738gAAAAADAs0ja5JcUFdzPT4yXViOXs5pUX
+    # secret key = 6LfI738gAAAAAM6mEDXnCPNziPeBy8D_aaB4WT_m
     email = forms.EmailField(label='Email')
     user_term_accept = forms.BooleanField(
         required=True, label='Li e aceito os termos de uso')
@@ -26,20 +30,19 @@ class CreateUserForm(UserCreationForm):
         model = MinhotecaUser
         fields = ['email','user_term_accept']
 
-class UserProfileForm(forms.ModelForm):
-    first_name = forms.CharField(label='Nome', max_length=50)
-    last_name = forms.CharField(label='Sobrenome', max_length=50)
-    contact_phone = forms.CharField(label='Telefone', max_length=11)
-    zip_code = forms.CharField(label='CEP', max_length=8)
-    address = forms.CharField(label='Endereço', max_length=100)
-    address_number = forms.CharField(label='Número', max_length=10)
-    address_complement = forms.CharField(label='Complemento', max_length=50)
-    neighborhood = forms.CharField(label='Bairro', max_length=50)
-    city = forms.CharField(label='Cidade', max_length=50)
-    state = forms.CharField(label='Estado', max_length=2)
+class UserProfileForm(ModelForm):
+    id = forms.CharField(widget=forms.HiddenInput())
 
+    class Meta:
+        model = MinhotecaUser
+        # model.state = "SP"
+        fields = ['email', 'first_name', 'last_name', 'contact_phone',
+            'zip_code', 'address', 'address_number', 'city', 'state',
+            'address_complement', 'neighborhood']
+            
     def save(self, commit=True):
-        user = super().save(commit=False)
+        user = MinhotecaUser.objects.get(id=self.cleaned_data['id'])
+        user.email = self.cleaned_data['email']
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
         user.contact_phone = self.cleaned_data['contact_phone']
@@ -47,16 +50,21 @@ class UserProfileForm(forms.ModelForm):
         user.address = self.cleaned_data['address']
         user.address_number = self.cleaned_data['address_number']
         user.address_complement = self.cleaned_data['address_complement']
-        user.can_borrow = user.first_name and user.contact_phone and \
-            user.email and user.zip_code and user.address and user.city and \
-                user.address_number and user.state
+        user.neighborhood = self.cleaned_data['neighborhood']
+        user.city = self.cleaned_data['city']
+        user.state = self.cleaned_data['state']
+        user.can_borrow = \
+            len(user.first_name.strip()) > 0 and \
+                len(user.contact_phone.strip()) > 0 and \
+                    len(user.last_name.strip()) > 0 and \
+                        len(user.zip_code.strip()) > 0 and \
+                            len(user.address.strip()) > 0 and \
+                                len(user.city.strip()) > 0 and \
+                                    len(user.address_number.strip()) > 0 and \
+                                        len(user.state.strip()) > 0
         if commit:
             user.save()
         
-        return user        
+        return user
+        
 
-    class Meta:
-        model = MinhotecaUser
-        fields = ['first_name', 'last_name', 'contact_phone', 'zip_code',
-            'address', 'address_number', 'address_complement',
-            'neighborhood', 'city', 'state']
