@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Minhoteca - Perfil do Usuário{% endblock %}
+{% block title %}Perfil do Usuário{% endblock %}
 {% block content %}
 <section id="profile-section" class="container">
 
@@ -8,12 +8,17 @@
         <p class="mb-4 text-secondary">Preencha os dados de perfil para que possamos formalizar os empréstimos
             podendo fazer a entrega e recuperação dos livros adequadamente.</p>
 
-        <div class="col-12 col-md-8">
-            <h6 class="">Força do perfil:</h6>
-            <div class="progress bg-secondary">
-                <div class="progress-bar bg-success" role="progressbar" style="width: {{profile_level}}%;"
-                    aria-valuenow="{{profile_level}}%" aria-valuemin="0" aria-valuemax="100">{{profile_level}}%
+        <div class="row">
+            <div class="col-12 col-md-8">
+                <h6 class="">Força do perfil:</h6>
+                <div class="progress bg-secondary">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{profile_level}}%;"
+                        aria-valuenow="{{profile_level}}%" aria-valuemin="0" aria-valuemax="100">{{profile_level}}%
+                    </div>
                 </div>
+            </div>
+            <div class="col-12 col-md-4 text-right">
+                <a href="{% url 'accounts:change_password' %}" class="btn btn-info btn-sm">Redefinir Senha</a>
             </div>
         </div>
     </header>
@@ -35,13 +40,11 @@
                         border border-danger
                         {% endif %}" id="{{profile_form.email.name}}" name="{{profile_form.email.name}}"
                             value="{{ profile_form.email.value|default_if_none:"" }}">
-                        {% if profile_form.email.errors %}
                         <span class="help-block
                         {% if profile_form.email.errors %}
                             text-danger small
                         {% endif %}
                     ">{{ profile_form.email.errors.0 }}</span>
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -227,10 +230,6 @@
                 </div>
             </div>
         </form>
-    </div>
-
-    <div class="p-4 mt-3 border">
-        <h4>Redefinir Senha</h4>
     </div>
 </section>
 <script>

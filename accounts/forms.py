@@ -1,6 +1,6 @@
 from django import forms
 from django.forms.models import ModelForm
-from django.contrib.auth.forms import PasswordChangeForm as PdwChangeForm
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import get_user_model
 from .models import MinhotecaUser as MinhotecaUser
@@ -68,3 +68,10 @@ class UserProfileForm(ModelForm):
         return user
         
 
+class PwdChangeForm(PasswordChangeForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['old_password'].widget.attrs['class'] = 'form-control'
+        self.fields['new_password1'].widget.attrs['class'] = 'form-control'
+        self.fields['new_password2'].widget.attrs['class'] = 'form-control'

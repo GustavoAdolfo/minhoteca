@@ -35,15 +35,16 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse w-100" id="navbarDefaultMenu">
-                    <ul class="navbar-nav w-100 d-flex flex-md-column text-center text-md-end">
-                        <li><a href="#" class="nav-link btn">Livros</a></li>
-                        <li><a href="#" class="nav-link btn">Autores</a></li>
+                <div class="collapse navbar-collapse w-100 align-items-start" id="navbarDefaultMenu">
+                    <ul class="navbar-nav w-100 d-flex flex-md-column align-items-start">
+                        <li class=""><a href="#" class="nav-link btn">Livros</a></li>
+                        <li class=""><a href="#" class="nav-link btn">Autores</a></li>
                         {% if not user.is_authenticated %}
-                        <li><a href="{% url 'accounts:login' %}" class="nav-link btn">Entrar</a></li>
+                        <li class=""><a href="{% url 'accounts:login' %}" class="nav-link btn">Entrar</a></li>
                         {% else %}
-                        <li><a href="{% url 'accounts:profile' %}" class="nav-link btn">Perfil</a></li>
-                        <li><a href="{% url 'accounts:logout' %}" class="nav-link btn">Sair</a></li>
+                        <li class=""><a href="{% url 'accounts:profile' %}" class="nav-link btn">Perfil</a>
+                        </li>
+                        <li class=""><a href="{% url 'accounts:logout' %}" class="nav-link btn">Sair</a></li>
                         {% endif %}
                     </ul>
                 </div>

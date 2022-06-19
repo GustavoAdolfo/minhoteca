@@ -1,20 +1,23 @@
 import logging
 from django.core import mail
+from django.views import View
 from django.urls import reverse
 from django.utils.encoding import force_bytes, force_str
 from django.utils.html import strip_tags
 from django.http import HttpResponseRedirect
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages, auth
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.contrib.auth.forms import SetPasswordForm
 import environ
+import base64
 from .tokens import account_activation_token
-from .forms import CreateUserForm, UserProfileForm
+from .forms import CreateUserForm, UserProfileForm, PwdChangeForm
 from .models import MinhotecaUser
 
 
@@ -210,3 +213,86 @@ def edit_profile(request):
             'Por favor tente novamente mais tarde.')
         )
         return HttpResponseRedirect('/')
+
+
+@login_required(login_url='user/login/')
+def changepassword(request):
+    if request.method == "POST":
+        form = PwdChangeForm(data=request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your Password Changed",
+                             extra_tags='green')
+            return redirect('crmapp')
+    else:
+        form = PwdChangeForm(user=request.user)
+    context = {'form': form}
+    return render(request, 'changepassword.html', context)
+
+
+def reset_password_confirm(request, uidb64=None, token=None,
+                           token_generator=default_token_generator):
+    """
+    View that checks the hash in a password reset link and presents a
+    form for entering a new password.
+    """
+    assert uidb64 is not None and token is not None  # checked by URLconf
+
+    try:
+        uidb64 += "=" * ((4 - len(uidb64) % 4) % 4)
+        uid_int = int(base64.b64decode(uidb64))
+        user = MinhotecaUser.objects.get(id=uid_int)
+    except Exception as e:
+        print(e)
+        user = None
+
+    ctx = {}
+
+    if user is not None and token_generator.check_token(user, token):
+        ctx['validlink'] = True
+        if request.method == 'POST':
+            form = SetPasswordForm(user, request.POST)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(reverse('accounts:reset_password_complete'))
+            else:
+                ctx['form'] = form
+                return render(request, 'reset_password_confirm.html', ctx)
+        else:
+            form = SetPasswordForm(user, request.GET)
+            ctx['form'] = form
+            return render(request, 'reset_password_confirm.html', ctx)
+    else:
+        ctx['validlink'] = False
+        messages.add_message(
+            request, messages.ERROR, 'Este link não é mais válido. Se deseja alterar sua senha, solicite novamente.')
+        return HttpResponseRedirect(reverse('accounts:reset_password'))
+
+
+class ChangePasswordView(View):
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        context = {'user': user}
+        return render(request, 'change_password.html', context)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            form = SetPasswordForm(request.user, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(
+                    request, "Você precisa fazer login novamente para validar a nova senha.")
+                return HttpResponseRedirect(reverse('accounts:logout'))
+            else:
+                ctx = {}
+                ctx['form'] = form
+                return render(request, 'change_password.html', ctx)
+        except Exception as error:
+            log.error(error)
+            messages.error(
+                request,
+                ('Ocorreu uma falha ao atualizar os dados. '+
+                'Por favor tente novamente mais tarde.')
+            )
+            return HttpResponseRedirect(reverse('accounts:change_password'))

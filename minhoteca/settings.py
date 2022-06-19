@@ -70,6 +70,7 @@ TEMPLATES = [
         'DIRS': [
             Path.joinpath(BASE_DIR, 'html'),
             Path.joinpath(BASE_DIR, 'accounts'),
+            Path.joinpath(BASE_DIR, 'library'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
