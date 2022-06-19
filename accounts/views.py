@@ -60,7 +60,8 @@ def create_user(request):
                     request,
                     messages.SUCCESS,
                     'Foi enviado um e-mail de confirmação com instruções para '+
-                    'validar sua conta.<br/>Aguardo você em breve!')
+                    'validar sua conta.<br/>Aguardo você em breve!',
+                    extra_tags='safe')
                 messages.add_message(
                     request,
                     messages.INFO,

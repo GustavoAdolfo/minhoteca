@@ -29,7 +29,7 @@
             line-height: 2rem;
         }
 
-        button {
+        .button {
             min-width: 100px;
             background-color: #B08968;
             color: #fff;
@@ -52,8 +52,7 @@
             Clique no link abaixo para confirmar sua conta:
         </p>
         <p style="text-align: center;">
-            <a
-                href="{{ domain }}{% url 'accounts:confirmation' uidb64=uid token=token %}"><button>Confirmar</button></a>
+            <a class=".button" href="{{ domain }}{% url 'accounts:confirmation' uidb64=uid token=token %}">Confirmar</a>
         </p>
         <p>
             Ou copie e cole o endereço abaixo no navegador:<br />

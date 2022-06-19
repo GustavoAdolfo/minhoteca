@@ -1,16 +1,102 @@
 {% extends 'base.html' %}
-
 {% block title %}Minhoteca{% endblock %}
+{% load static %}
 
 {% block content %}
 <div class="container" id="front">
     <div class="row justify-content-md-center">
         <div class="col col-sm-12 col-md-7" style="border: 1px solid blue">
-            Apresentação
+            <section id="landing">
+                <h4 class="p-4 mb-3">Há no momento {{books_count}} livros disponíveis de {{authors_count}} autores
+                    diferentes</h4>
+                <div class="apresentacao">
+                    <div class="chamada">
+                        <div>
+                            <p>
+                                <strong>Uma ideia bem simples:</strong> se você está por perto e gosta de ler, vou te
+                                emprestar um
+                                livro!
+                                Pois é, não te conheço... mas tudo bem, vamos apostar na humanidade que assim todos
+                                crescemos.
+                            </p>
+                            <p>Se algum dos livros disponibilizados aqui lhe interessar solicite o empréstimo,
+                                respeite o prazo de devolução e seja cuidadoso. Depois de você, outro leitor terá sua
+                                chance.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mapa">
+                        <div id="descricao">
+                            <h4 class="p-3 my-3">Funciona assim:</h4>
+                            <ul class="list-group">
+                                <li class="list-group-item">Se você mora ou trabalha num raio de 2km da Estação
+                                    Tamanduateí do Metrô, em São Paulo, pode solicitar o empréstimo;</li>
+                                <li class="list-group-item">Você solicita o livro e combinamos de nos encontrar nas
+                                    catracas do metrô para a entrega;</li>
+                                <li class="list-group-item">Quando for devolver, o mesmo procedimento.</li>
+                                <li class="list-group-item">No seu cadastro vai ser necessário informar alguns dados
+                                    para contato e para que (em casos
+                                    excepicionais) você possa ser localizado e o livro ser recuperado.</li>
+                                <li class="list-group-item">Seus dados <em>NUNCA</em> serão compartilhados com ninguém
+                                    ou com qualquer organização, empresa
+                                    ou instituição.</li>
+                                <li class="list-group-item">Você não precisa pagar por cadastro ou empréstimo.
+                                </li>
+                                <li class="list-group-item">Tudo o que você precisa é ser honesto, íntegro, responsável,
+                                    comprometido... enfim, o básico da civilidade.
+                                </li>
+                            </ul>
+                        </div>
+                        <figure id="mapa-raio">
+                            <a href="#" data-toggle="modal" data-target="#mapaModal">
+                                <img src="{% static 'imgs/mapa.png' %}" alt="Mapa"
+                                    title="Raio de 2km da estação de metrô Vila Matilde" class="img-thumbnail">
+                            </a>
+                            <figcaption>Entorno de 2km da Estação Tamanduateí do Metrô.</figcaption>
+                        </figure>
+                    </div>
+                </div>
+                <aside>
+                    <div class="recados">
+                        <h5>
+                            Quer ajudar a espalhar essa ideia?
+                        </h5>
+                        <p>Disponibilize uma "minhoteca" no seu bairro, condomínio, empresa, ou qualquer área delimitada
+                            por você. Se você entende um pouco que seja de desenvolvimento de software, o código fonte
+                            está disponível
+                            livremente no <a href="https://github.com/GustavoAdolfo/minhoteca" target="_blank"
+                                class="link-recados">GitHub do projeto</a>.
+                        </p>
+                        <hr />
+                        <p>
+                            <span class="aside-alerta">É importante ressaltar que a responsabilidade sobre isso é
+                                totalmente sua.
+                                <strong>Nenhum envolvido no projeto <em>Minhoteca</em> presta serviços de
+                                    suporte</strong>. <br />
+                                Lembre-se: <strong>a responsabilidade sobre os empréstimos dos SEUS livros também é
+                                    SUA</strong>.</span></p>
+                    </div>
+                    <div class="recados">
+                        <h5>
+                            Já ouviu falar da PLV?
+                        </h5>
+                        <p>A Plataforma Livros Viajantes pretende espalhar o hábito da leitura e as iniciativas
+                            literárias por todo
+                            o país e ainda ajudar o
+                            mercado editorial brasileiro a evoluir nesses "tempos digitais". Para saber mais acesse <a
+                                href="https://www.livrosviajantes.com.br" target="_blank"
+                                class="link-plv">www.livrosviajantes.com.br</a></p>
+                        <p>Você também pode ajudar com a realização desse projeto comprando livros pelos links que
+                            disponibilizamos
+                            aqui.</p>
+                        <p>Embarque nessa com a gente!</p>
+                    </div>
+                </aside>
+            </section>
 
             <div class="row d-lg-none">
                 <div class="col col-12">
-                    <button class="btn btn-primary">Cadastre-se</button>
+                    <button class="btn btn-info">Cadastre-se</button>
                 </div>
             </div>
         </div>

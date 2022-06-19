@@ -1,0 +1,75 @@
+<header id="navegacao">
+    <h2 class="py-3 mb-3">{{titulo}}</h2>
+
+    {% if filters %}
+    <div class="filtros row">
+        {% if classifications %}
+        <div class="dropdown col-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Classificar
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                {% for item in classifications %}
+                {{ item }}
+                {% if 'search/' in request.path %}
+                <a class="dropdown-item"
+                    href="?ord={{classification.id}}&term_search={{request.GET.term_search}}">{{classification.description}}</a>
+                {% else %}
+                <a class="dropdown-item" href="?ord={{classification.id}}">{{classification.description}}</a>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        <div class="busca col-10">
+            <form action="{% if 'search/' in request.path %}#{% else %}{{search_url}}{% endif %}" method="get">
+                <div class="form-group row">
+                    <div class="col-12 input-group">
+                        <input type="search" class="form-control" value="" id="search-book"
+                            placeholder="{{placeholder}}" name="term_search" />
+                        <div class="input-group-append">
+                            <input type="submit" class="input-group-text" id="" value="Buscar" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+    {% if paginacao %}
+    <nav aria-label="Paginas Livros">
+        <ul class="pagination pagination-sm justify-content-end">
+            {% if navegador.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?pg=1" aria-label="Previous">
+                    <span aria-hidden="true"><i class="fas fa-step-backward"></i></span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?pg={{ navegador.previous_page_number }}">
+                    <i class="fas fa-backward"></i>
+                </a>
+            </li>
+            {% endif %}
+            {% for pg in navegador.paginator.page_range %}
+            <li class="page-item {% if navegador.number == pg %}active{% endif %}">
+                <a class="page-link" href="?pg={{pg}}">{{pg}}</a>
+            </li>
+            {% endfor %}
+            {% if navegador.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?pg={{ navegador.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true"><i class="fas fa-forward"></i></span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?pg={{ navegador.paginator.num_pages }}">
+                    <i class="fas fa-step-forward"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</header>

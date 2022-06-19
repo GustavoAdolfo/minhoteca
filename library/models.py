@@ -37,8 +37,10 @@ class Book(models.Model):
         Publisher, default=0, on_delete=models.DO_NOTHING)
     language = models.CharField(max_length=20)
     is_available = models.BooleanField(default=False)
-    isbn = models.IntegerField()
+    isbn = models.PositiveBigIntegerField()
+    # isbn = models.CharField(max_length=13, blank=False)
     picture_url = models.URLField(blank=True, max_length=500)
+    borrowed = models.BooleanField(default=False)
 
     def __str__(self):
         if self.subtitle:

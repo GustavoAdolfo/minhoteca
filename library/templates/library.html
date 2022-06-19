@@ -3,22 +3,87 @@
 {% block title %}Livros Disponíveis{% endblock %}
 
 {% block content %}
-<h1>Livros Disponíveis</h1>
 
-<table id="table-book-list" class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th>Título</th>
-            <th>Autor</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for book in books %}
-        <tr>
-            <td><a href="#" class="book-link">{{ book.title }}</a></td>
-            <td><a href="#" class="author-link">{{ book.author }}</a></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<section id="livros">
+    {% include "nav_header.html" with titulo="Livros" classificacao=True classificacoes=classifications filters=True paginacao=True placeholder="Pesquise por título, subtítulo ou autor" navegador=livros search_url="search" %}
+
+    <div class="table-responsive">
+        <table class="table table-striped table-sm" id="books-list">
+            <caption>Exibindo {{ books.start_index }}-{{ books.end_index }} de {{ books.paginator.count }} livros
+                disponíveis</caption>
+            <thead class="">
+                <tr>
+                    <th class="titulo">
+                        <div class="d-flex justify-content-between">
+                            <div class="">Título / Subtítulo</div>
+                            <div class="">
+                                {% if request.GET.ord and request.GET.ord == '2' %}
+                                <span class="badge badge-info">
+                                    <i class="fas fa-sort-alpha-up"></i>
+                                </span>
+                                {% elif not request.GET.ord or request.GET.ord == '1' %}
+                                <span class="badge badge-secondary">
+                                    <i class="fas fa-sort-alpha-down"></i>
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="d-flex justify-content-between">
+                            <div class="">Autor</div>
+                            <div class="">
+                                {% if request.GET.ord and request.GET.ord == '4' %}
+                                <span class="badge badge-info">
+                                    <i class="fas fa-sort-alpha-up"></i>
+                                </span>
+                                {% elif request.GET.ord and request.GET.ord == '3' %}
+                                <span class="badge badge-secondary">
+                                    <i class="fas fa-sort-alpha-down"></i>
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </th>
+                    <th>Idioma</th>
+                    <th>Opções</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr class="{% if book.borrowed %}bg-secondary{% endif %}">
+                    <td class="titulo">
+                        <a href="{% url 'library:book' book.id %}"
+                            class="livro {% if book.borrowed %}text-light{% endif %}">
+                            <span class="titulo">
+                                {{ book.title }}</span>
+                            <br />
+                            <span class="subtitulo">{{ book.subtitle }}</span>
+                        </a>
+                    </td>
+                    <td> <a href="{% url 'library:author' book.author_id %}"
+                            class="{% if book.borrowed %}text-light{% endif %}">{{ book.author }}</a></td>
+                    <td class="{% if book.borrowed %}text-light{% endif %}">{{ book.language }}</td>
+                    <td class="text-center">
+                        <!-- {% if not book.borrowed %}
+                        <a href="{ % url 'loans:new' book.id %}" class="text-primary" title="Solicitar empréstimo">
+                            <i class="fas fa-book"></i></a>
+                        {% else %}
+                        <a href="{ % url 'loans:reservation' book.id %}" class="text-light"
+                            title="Pedir para ser o próximo">
+                            <i class="fas fa-hand-paper"></i>
+                        </a>
+                        {% endif %} -->
+                    </td>
+                </tr>
+                {% empty %}
+                <tr colspan="3">Ainda não há livros cadastrados.</tr>
+                {% endfor %}
+            </tbody>
+            <tfoot></tfoot>
+        </table>
+    </div>
+    {% include 'nav_footer.html' with navegador=books %}
+</section>
+
 {% endblock %}

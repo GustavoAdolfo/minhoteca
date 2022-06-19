@@ -58,7 +58,7 @@ class BookModelTests(TestCase):
             synopsis='A novel about a',
             language='English',
             is_available=True,
-            isbn=123456789
+            isbn='123456789'
         )
         book.author = author
         book.publisher = publisher
