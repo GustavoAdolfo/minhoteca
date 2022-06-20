@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Autores{% endblock %}
+{% load static %}
+{% block content %}
+<section id="autores">
+    {% include "nav_header.html" with titulo="Autores" classificacao=True classificacoes=classifications filters=True paginacao=True placeholder="Pesquise por nome, sobrenome ou país" navegador=autores search_url="search" %}
+    <div class="listagem-autores">
+        {% for author in authors %}
+        <div class="card autor">
+            <a href="{% url 'library:author' author.author.id %}" class="card-link autor-link">
+                {% if author.author.picture_url %}
+                <img src="{{ author.author.picture_url }}" alt="{{ author.author.name }}" class="autor-foto" />
+                {% else %}
+                <img src="{% static 'imgs/blank-profile-picture-973460.svg'%}" alt="{{ author.author.name }}"
+                    class="autor-foto" />
+                {% endif %}
+            </a>
+            <div class="card-body">
+                <h6 class="card-title">
+                    <a href="{% url 'library:author' author.author.id %}" class="card-link autor-link">
+                        {{author.author.name}}
+                    </a>
+                </h6>
+                <div class="card-text">
+                    <dl class="row">
+                        <dt class="col-sm-9">País de Origem</dt>
+                        <dd class="col-sm-3">
+                            {% if author.flag %}
+                            <img class="icone" src="{{author.flag}}" alt="{{ author.author.country }}"
+                                title="{{ author.author.country }}" />
+                            {% else %}
+                            <span class="text-muted">{{ author.author.country }}</span>
+                            {% endif %}
+                        </dd>
+                        <dt class="col-sm-9">Livros disponíveis</dt>
+                        <dd class="col-sm-3">{{ author.author.count_books }}</dd>
+                        {% if author.author.wikipedia %}
+                        <dt class="col-sm-9">
+                            Wikipédia
+                        </dt>
+                        <dd class="col-sm-3">
+                            <span class="text-muted">
+                                <a href="{{ author.author.wikipedia }}" target="_blank" class="card-link autor-link">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </span>
+                        </dd>
+                        {% endif %}
+                    </dl>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% include 'nav_footer.html' with navegador=authors %}
+</section>
+{% endblock %}

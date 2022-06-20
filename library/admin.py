@@ -3,7 +3,7 @@ from .models import Book, Author, Publisher
 
 
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'subtitle', 'author_name',
+    list_display = ('title', 'subtitle', 'author_name', 'publisher_name',
                     'is_available', 'isbn')
     list_display_links = ('title',)
     list_per_page = 15
@@ -13,6 +13,8 @@ class BookAdmin(admin.ModelAdmin):
 
     def author_name(self, obj):
         return obj.author.name
+    def publisher_name(self, obj):
+        return obj.publisher.name
 
     author_name.short_description = 'Author'
     author_name.admin_order_field = 'author_id__name'

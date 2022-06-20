@@ -41,7 +41,7 @@
                 <div class="collapse navbar-collapse w-100 align-items-start" id="navbarDefaultMenu">
                     <ul class="navbar-nav w-100 d-flex flex-md-column align-items-start">
                         <li class=""><a href="{% url 'library:books' %}" class="nav-link btn">Livros</a></li>
-                        <li class=""><a href="#" class="nav-link btn">Autores</a></li>
+                        <li class=""><a href="{% url 'library:authors' %}" class="nav-link btn">Autores</a></li>
                         {% if not user.is_authenticated %}
                         <li class=""><a href="{% url 'accounts:login' %}" class="nav-link btn">Entrar</a></li>
                         {% else %}

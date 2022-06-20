@@ -498,7 +498,6 @@
     {
         "id": 39,
         "name": "Canada",
-        "pt-br": "Canadá",
         "isoAlpha2": "CA",
         "isoAlpha3": "CAN",
         "isoNumeric": 124,
@@ -1346,7 +1345,6 @@
     {
         "id": 104,
         "name": "Italy",
-        "pt-br": "Itália",
         "isoAlpha2": "IT",
         "isoAlpha3": "ITA",
         "isoNumeric": 380,
@@ -1386,7 +1384,6 @@
     {
         "id": 107,
         "name": "Japan",
-        "pt-br": "Japão",
         "isoAlpha2": "JP",
         "isoAlpha3": "JPN",
         "isoNumeric": 392,
@@ -1985,7 +1982,6 @@
     {
         "id": 153,
         "name": "Niger",
-        "pt-br": "Nigéria",
         "isoAlpha2": "NE",
         "isoAlpha3": "NER",
         "isoNumeric": 562,
@@ -2260,7 +2256,6 @@
     {
         "id": 174,
         "name": "Republic of the Congo",
-        "pt-br": "República do Congo",
         "isoAlpha2": "CG",
         "isoAlpha3": "COG",
         "isoNumeric": 178,
@@ -2625,7 +2620,6 @@
     {
         "id": 202,
         "name": "Sudan",
-        "pt-br": "Sudão",
         "isoAlpha2": "SD",
         "isoAlpha3": "SDN",
         "isoNumeric": 736,
@@ -2835,8 +2829,7 @@
     },
     {
         "id": 218,
-        "name": "Turkey",
-        "pt-br": "Turquia",
+        "name": "Turquia",
         "isoAlpha2": "TR",
         "isoAlpha3": "TUR",
         "isoNumeric": 792,

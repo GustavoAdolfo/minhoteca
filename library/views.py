@@ -12,14 +12,14 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from .models import Book, Author
 
 
-url = staticfiles_storage.path('countries.json')
+url = staticfiles_storage.path('data/countries.json')
 countries = []
 try:
     with open(url, "r", encoding='utf-8') as cdata:
         CONTENT = ''.join(cdata.readlines())
         countries = json.loads(CONTENT)
         countries = list(filter(lambda x: 'pt-br' in x, countries))
-except Exception:
+except Exception as ex:
     pass
 
 
@@ -97,8 +97,69 @@ def search_books(request):
     except Book.DoesNotExist:
         raise Http404()
 
-def book(request):
-    pass
+def book(request, id:int):
+    """Retorna os dados livro solicitado."""
+    try:
+        book = Book.objects.get(id=id)
+        if not book.is_available:
+            raise Http404()
+        return render(request, 'book.html',
+                      {'book': book})
+    except book.DoesNotExist:
+        raise Http404()
 
-def author(request):
-    pass
+def author(request, id:int):
+    author = get_object_or_404(Author, id=id)
+    books = author.book_set.filter(author_id=id,
+                                    is_available=True)
+    dic_author = {'author': author}
+    country = next(filter(
+        lambda x: x['pt-br'] == author.country, countries), None)
+    if country:
+        dic_author.update(
+            {'flag': 'data:image/png;base64, {0}'.format(country['flag'])})
+    else:
+        dic_author.update({'flag': ''})
+
+    return render(request, 'author.html',
+                  {'author': dic_author, 'books': books})
+
+def authors(request):
+    """Lista autores cadastrados."""
+    ord = request.GET.get('ord')
+    authors = Author.objects.order_by(
+        'name').filter(book__is_available=True).distinct()
+    if ord and ord == '2':
+        ordered_list = sorted(
+            authors, key=operator.attrgetter('name'), reverse=True)
+    elif ord and ord == '3':
+        ordered_list = sorted(
+            authors, key=operator.methodcaller('count_books'), reverse=True)
+    elif ord and ord == '4':
+        ordered_list = sorted(
+            authors, key=operator.methodcaller('count_books'))
+    else:
+        ordered_list = sorted(authors, key=operator.attrgetter('name'))
+
+    authors_list = []
+    for author in ordered_list:
+        dic_autor = {'author': author}
+        country = next(filter(
+            lambda x: x['pt-br'] == author.country, countries), None)
+        if country:
+            dic_autor.update(
+                {'flag': 'data:image/png;base64, {0}'.format(country['flag'])})
+        else:
+            dic_autor.update({'flag': ''})
+        authors_list.append(dic_autor)
+    paginator = Paginator(authors_list, 20)
+    pg = request.GET.get('pg')
+    authors = paginator.get_page(pg)
+    classifications = [
+        {'id': '1', 'description': 'Nome de A - Z'},
+        {'id': '2', 'description': 'Nome de Z - A'},
+        {'id': '3', 'description': 'Mais livros'},
+        {'id': '4', 'description': 'Menos livros'}
+    ]
+    return render(request, 'authors.html',
+                  {'authors': authors, 'classification': classifications})

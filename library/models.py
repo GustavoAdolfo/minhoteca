@@ -9,6 +9,9 @@ class Author(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def count_books(self):
+        return self.book_set.filter(is_available=True).count()
 
     class Meta:
         verbose_name = 'Author'
@@ -29,14 +32,14 @@ class Publisher(models.Model):
 
 class Book(models.Model):
     title = models.CharField(max_length=150)
-    subtitle = models.CharField(max_length=150, blank=True)
-    synopsis = models.TextField(blank=True)
+    subtitle = models.CharField(max_length=150, blank=True, null=True)
+    synopsis = models.TextField(blank=True, null=True)
     author = models.ForeignKey(
         Author, on_delete=models.DO_NOTHING, default=0)
     publisher = models.ForeignKey(
         Publisher, default=0, on_delete=models.DO_NOTHING)
     language = models.CharField(max_length=20)
-    is_available = models.BooleanField(default=False)
+    is_available = models.BooleanField(default=0)
     isbn = models.PositiveBigIntegerField()
     # isbn = models.CharField(max_length=13, blank=False)
     picture_url = models.URLField(blank=True, max_length=500)

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}{{book.title}}{% endblock %}
+
+{% block content %}
+<section id="exemplar">
+    <div class="">
+        <div class="card">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img class="card-img" src="{{ book.picture_url }}" alt="{{ book.title }}">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ book.title }}</h4>
+                        <h5 class="card-subtitle">{{ book.subtitle }}</h5>
+                        <p class="card-text">
+                            <a href="{% url 'library:author' book.author_id %}" class="card-link">{{ book.author }}</a>
+                            &blacksquare;
+                            <small class="text-muted">{{ book.publisher }}</small>
+                            <br>
+                            {% if not book.borrowed %}
+                            <a href="#" class="card-link text-success" title="Solicitar empréstimo">
+                                <i class="fas fa-book"></i>
+                            </a>
+                            {% else %}
+                            <a href="#" class="card-link text-warning" title="Pedir para ser o próximo">
+                                <i class="fas fa-hand-paper"></i>
+                            </a>
+                            {% endif %}
+                        </p>
+                        <p class="card-text">{{ book.synopsis }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <aside>
+        <p>
+            Compre seu exemplar deste e de outros livros na Amazon e ajude com o desenvolvimento do projeto
+            da <a href="https://www.livrosviajantes.com.br" id="plv">Plataforma Livros Viajantes</a>!
+        </p>
+        <div class="anuncios">
+            { % for link in links % }
+            <div class="anuncio-livro">
+                <iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no"
+                    frameborder="0"
+                    src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=BR&source=ss&ref=as_ss_li_til&ad_type=product_link&tracking_id=plv0a-20&language=pt_BR&marketplace=amazon&region=BR&{{ link }}&show_border=true&link_opens_in_new_window=true"></iframe>
+            </div>
+            { % endfor % }
+        </div>
+    </aside> -->
+</section>
+{% endblock %}
