@@ -3,63 +3,63 @@
 {% block title %}{{author.author.name}}{% endblock %}
 
 {% block content %}
-<section id="detalhe-autor" class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card text-center">
-                <img src="{{ author.author.picture_url }}" alt="{{ author.author.name }}" class="autor-foto" />
-                <div class="card-body">
-                    <h2 class="card-title">{{author.author.name}}</h2>
-                    <div class="card-text">
-                        <dl class="row">
-                            <dt class="col-sm-9">País de Origem</dt>
-                            <dd class="col-sm-3">
-                                {% if author.flag %}
-                                <img class="icone" src="{{author.flag}}" alt="{{ author.author.country }}"
-                                    title="{{ author.author.country }}" />
-                                {% else %}
-                                <span class="text-muted">{{ author.author.country }}</span>
-                                {% endif %}
-                            </dd>
-                            <dt class="col-sm-9">Livros disponíveis</dt>
-                            <dd class="col-sm-3">{{ author.author.count_books }}</dd>
-                            {% if author.author.wikipedia %}
-                            <dt class="col-sm-9">
-                                Wikipédia
-                            </dt>
-                            <dd class="col-sm-3">
-                                <span class="text-muted">
-                                    <a href="{{ author.author.wikipedia }}" target="_blank"
-                                        class="card-link autor-link">
-                                        <i class="fas fa-external-link-alt"></i>
-                                    </a>
-                                </span>
-                            </dd>
-                            {% endif %}
-                        </dl>
-                    </div>
+<section class="exemplar">
+    <div class="card" style="width: 18rem;">
+        <div class="card-header">
+            <h4 class="card-title">{{author.author.name}}</h4>
+        </div>
+        <div class="card-body">
+            <img src="{{ author.author.picture_url }}" alt="{{ author.author.name }}" class="card-img" />
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col col-12 text-muted">
+                    <i class="fa-solid fa-language"></i>
+                    {{ book.language }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-4">
+                    {% if author.flag %}
+                    <img class="icone" src="{{author.flag}}" alt="{{ author.author.country }}"
+                        title="{{ author.author.country }}" />
+                    {% else %}
+                    <span class="text-muted">{{ author.author.country }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="col col-4">
+                    <i class="fa-solid fa-book"></i>{{ author.author.count_books }}
+                </div>
+                <div class="col col-4">
+                    <a href="{{ author.author.wikipedia|default_if_none:"#" }}" target="_blank"
+                        class="card-link autor-link">
+                        <i class="fa-regular fa-address-card"></i>
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            {% if books %}
-            <h3>Livros</h3>
-            <ul class="list-group list-group-flush">
-                {% for book in books %}
-                <li class="list-group-item list-group-item-action">
-                    <a href="{% url 'library:book' book.id %}" class="">
-                        {{book.title}}<br />
-                        {% if book.subtitle %}
-                        <small>
-                            {{ book.subtitle }}
-                        </small>
-                        {% endif %}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-        </div>
     </div>
+
+    <div class="book-list">
+        {% if books %}
+        <h3>Livros</h3>
+        <ul class="list-group list-group-flush">
+            {% for book in books %}
+            <li class="list-group-item list-group-item-action">
+                <a href="{% url 'library:book' book.id %}" class="">
+                    {{book.title}}<br />
+                    {% if book.subtitle %}
+                    <small>
+                        {{ book.subtitle }}
+                    </small>
+                    {% endif %}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+
 </section>
 {% endblock %}

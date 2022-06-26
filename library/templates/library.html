@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Livros Disponíveis{% endblock %}
 
@@ -45,35 +46,39 @@
                             </div>
                         </div>
                     </th>
-                    <th>Idioma</th>
                     <th>Opções</th>
                 </tr>
             </thead>
             <tbody>
                 {% for book in books %}
                 <tr class="{% if book.borrowed %}bg-secondary{% endif %}">
-                    <td class="titulo">
+                    <td class="">
                         <a href="{% url 'library:book' book.id %}"
                             class="livro {% if book.borrowed %}text-light{% endif %}">
-                            <span class="titulo">
-                                {{ book.title }}</span>
-                            <br />
-                            <span class="subtitulo">{{ book.subtitle }}</span>
+                            <h5 class="">{{ book.title }}</h5>
+                            {% if book.subtitle %}
+                            <h6 class="">{{ book.subtitle }}</h6>
+                            {% endif %}
                         </a>
                     </td>
-                    <td> <a href="{% url 'library:author' book.author_id %}"
-                            class="{% if book.borrowed %}text-light{% endif %}">{{ book.author }}</a></td>
-                    <td class="{% if book.borrowed %}text-light{% endif %}">{{ book.language }}</td>
-                    <td class="text-center">
-                        <!-- {% if not book.borrowed %}
-                        <a href="{ % url 'loans:new' book.id %}" class="text-primary" title="Solicitar empréstimo">
-                            <i class="fas fa-book"></i></a>
-                        {% else %}
-                        <a href="{ % url 'loans:reservation' book.id %}" class="text-light"
-                            title="Pedir para ser o próximo">
-                            <i class="fas fa-hand-paper"></i>
+                    <td>
+                        <a href="{% url 'library:author' book.author_id %}"
+                            class="{% if book.borrowed %}text-light{% endif %}">{{ book.author }}</a>
+                    </td>
+                    <td class="opcoes">
+                        {% if not book.borrowed %}
+                        <!-- <a href="{ % url 'loans:new' book.id %}" class="text-primary" title="Solicitar empréstimo"> -->
+                        <a href="{% url 'library:borrow' %}?book={{book.id}}" title="Solicitar empréstimo"
+                            class="disponivel">
+                            <i class="fa-solid fa-handshake-simple"></i>
                         </a>
-                        {% endif %} -->
+                        {% else %}
+                        <!-- <a href="{ % url 'loans:reservation' book.id %}" class="text-light" title="Pedir para ser o próximo"> -->
+                        <a href="{% url 'library:borrowing_queue' %}?book={{book.id}}" title="Pedir para ser o próximo"
+                            class="emprestado">
+                            <i class="fa-solid fa-person-walking"></i>
+                        </a>
+                        {% endif %}
                     </td>
                 </tr>
                 {% empty %}

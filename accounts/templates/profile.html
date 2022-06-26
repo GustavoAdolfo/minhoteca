@@ -5,20 +5,20 @@
 
     <header class="p-4 mb-4 border">
         <h1>Perfil de Usuário</h1>
-        <p class="mb-4 text-secondary">Preencha os dados de perfil para que possamos formalizar os empréstimos
+        <p class="mb-4">Preencha os dados de perfil para que possamos formalizar os empréstimos
             podendo fazer a entrega e recuperação dos livros adequadamente.</p>
 
         <div class="row">
             <div class="col-12 col-md-8">
                 <h6 class="">Força do perfil:</h6>
                 <div class="progress bg-secondary">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: {{profile_level}}%;"
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: {{profile_level}}%;"
                         aria-valuenow="{{profile_level}}%" aria-valuemin="0" aria-valuemax="100">{{profile_level}}%
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-4 text-right">
-                <a href="{% url 'accounts:change_password' %}" class="btn btn-info btn-sm">Redefinir Senha</a>
+            <div class="col-12 col-md-4 text-end align-bottom align-text-bottom">
+                <a href="{% url 'accounts:change_password' %}" class="btn btn-info btn-sm mt-2">Redefinir Senha</a>
             </div>
         </div>
     </header>
@@ -224,9 +224,9 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
                 <div class="col col-12 text-center">
-                    <button class="btn btn-primary" type="submit">Salvar</button>
+                    <button class="btn btn-lg btn-primary" type="submit">Salvar</button>
                 </div>
             </div>
         </form>

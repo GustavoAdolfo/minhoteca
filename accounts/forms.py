@@ -42,7 +42,9 @@ class UserProfileForm(ModelForm):
             
     def save(self, commit=True):
         user = MinhotecaUser.objects.get(id=self.cleaned_data['id'])
-        user.email = self.cleaned_data['email']
+        email = self.cleaned_data['email']
+        if email != user.email:
+            user.email = email
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
         user.contact_phone = self.cleaned_data['contact_phone']

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book, Author, Publisher
+from .models import Book, Author, Publisher, Borrowing
 
 
 class BookAdmin(admin.ModelAdmin):
@@ -43,3 +43,19 @@ class PublisherAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Publisher, PublisherAdmin)
+
+
+class BorrowingAdmin(admin.ModelAdmin):
+    list_display = ('book_title', 'borrower_email', 'date_borrowed', 'date_returned')
+    list_display_links = ('book_title', 'borrower_email')
+    list_per_page = 15
+    list_filter = ('borrower_id__email',)
+    search_fields = ('book_id__title', 'borrower_id__email')
+
+    def book_title(self, obj):
+        return obj.book.title
+
+    def borrower_email(self, obj):
+        return obj.borrower.email
+
+admin.site.register(Borrowing, BorrowingAdmin)

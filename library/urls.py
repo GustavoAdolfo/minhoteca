@@ -9,4 +9,7 @@ urlpatterns = [
     path('book/<int:id>/', views.book, name='book'),
     path('author/<int:id>/', views.author, name='author'),
     path('authors/', views.authors, name='authors'),
+    path('authors/search/', views.search_authors, name='search_authors'),
+    path('borrow/', views.borrow, name='borrow'),
+    path('borrowing-queue/', views.borrowers, name='borrowing_queue'),
 ]

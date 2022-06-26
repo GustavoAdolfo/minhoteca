@@ -2,56 +2,48 @@
 {% block title %}Autores{% endblock %}
 {% load static %}
 {% block content %}
-<section id="autores">
+<div class="container">
     {% include "nav_header.html" with titulo="Autores" classificacao=True classificacoes=classifications filters=True paginacao=True placeholder="Pesquise por nome, sobrenome ou país" navegador=autores search_url="search" %}
-    <div class="listagem-autores">
+    <section id="autores" class="d-flex flex-row flex-wrap justify-content-around p-3">
         {% for author in authors %}
-        <div class="card autor">
-            <a href="{% url 'library:author' author.author.id %}" class="card-link autor-link">
+        <div class="card autor mx-2 mb-4 w-25">
+            <div class="card-header">
+                <h5 class="card-title">{{author.author.name}}</h5>
+            </div>
+            <div class="card-body">
                 {% if author.author.picture_url %}
-                <img src="{{ author.author.picture_url }}" alt="{{ author.author.name }}" class="autor-foto" />
+                <img src="{{ author.author.picture_url }}" alt="{{ author.author.name }}" class="w-100" />
                 {% else %}
                 <img src="{% static 'imgs/blank-profile-picture-973460.svg'%}" alt="{{ author.author.name }}"
-                    class="autor-foto" />
+                    class="w-100" />
                 {% endif %}
-            </a>
-            <div class="card-body">
-                <h6 class="card-title">
-                    <a href="{% url 'library:author' author.author.id %}" class="card-link autor-link">
-                        {{author.author.name}}
-                    </a>
-                </h6>
-                <div class="card-text">
-                    <dl class="row">
-                        <dt class="col-sm-9">País de Origem</dt>
-                        <dd class="col-sm-3">
-                            {% if author.flag %}
-                            <img class="icone" src="{{author.flag}}" alt="{{ author.author.country }}"
-                                title="{{ author.author.country }}" />
-                            {% else %}
-                            <span class="text-muted">{{ author.author.country }}</span>
-                            {% endif %}
-                        </dd>
-                        <dt class="col-sm-9">Livros disponíveis</dt>
-                        <dd class="col-sm-3">{{ author.author.count_books }}</dd>
-                        {% if author.author.wikipedia %}
-                        <dt class="col-sm-9">
-                            Wikipédia
-                        </dt>
-                        <dd class="col-sm-3">
-                            <span class="text-muted">
-                                <a href="{{ author.author.wikipedia }}" target="_blank" class="card-link autor-link">
-                                    <i class="fas fa-external-link-alt"></i>
-                                </a>
-                            </span>
-                        </dd>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col col-4">
+                        {% if author.flag %}
+                        <img class="icone" src="{{author.flag}}" alt="{{ author.author.country }}"
+                            title="{{ author.author.country }}" />
+                        {% else %}
+                        <span class="text-muted">{{ author.author.country }}</span>
                         {% endif %}
-                    </dl>
+                    </div>
+                    <div class="col col-4">
+                        <a href="{% url 'library:author' author.author.id %}" class="card-link autor-link">
+                            <i class="fa-solid fa-book"></i>{{ author.author.count_books }}
+                        </a>
+                    </div>
+                    <div class="col col-4">
+                        <a href="{{ author.author.wikipedia|default_if_none:"#" }}" target="_blank"
+                            class="card-link autor-link">
+                            <i class="fa-regular fa-address-card"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
         {% endfor %}
-    </div>
+    </section>
     {% include 'nav_footer.html' with navegador=authors %}
-</section>
+</div>
 {% endblock %}

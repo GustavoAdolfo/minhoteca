@@ -5,21 +5,22 @@
     <div class="filtros row">
         {% if classifications %}
         <div class="dropdown col-2">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                data-bs-toggle="dropdown" aria-expanded="false">
                 Classificar
             </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                 {% for item in classifications %}
-                {{ item }}
                 {% if 'search/' in request.path %}
-                <a class="dropdown-item"
-                    href="?ord={{classification.id}}&term_search={{request.GET.term_search}}">{{classification.description}}</a>
+                <li>
+                    <a class="dropdown-item"
+                        href="?ord={{item.id}}&term_search={{request.GET.term_search}}">{{item.description}}</a>
+                </li>
                 {% else %}
-                <a class="dropdown-item" href="?ord={{classification.id}}">{{classification.description}}</a>
+                <li><a class="dropdown-item" href="?ord={{item.id}}">{{item.description}}</a></li>
                 {% endif %}
                 {% endfor %}
-            </div>
+            </ul>
         </div>
         {% endif %}
         <div class="busca col-10">

@@ -1,4 +1,5 @@
 from django.db import models
+from accounts.models import MinhotecaUser
 
 
 class Author(models.Model):
@@ -8,7 +9,7 @@ class Author(models.Model):
     picture_url = models.URLField(blank=True, max_length=500)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
     
     def count_books(self):
         return self.book_set.filter(is_available=True).count()
@@ -23,7 +24,7 @@ class Publisher(models.Model):
     website = models.URLField(blank=True, max_length=500)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
     class Meta:
         verbose_name = 'Publisher'
@@ -54,3 +55,17 @@ class Book(models.Model):
     class Meta:
         verbose_name = 'Book'
         verbose_name_plural = 'Books'
+
+class Borrowing(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.DO_NOTHING)
+    borrower = models.ForeignKey(MinhotecaUser, on_delete=models.DO_NOTHING)
+    date_borrowed = models.DateField(blank=True, null=True)
+    date_returned = models.DateField(blank=True, null=True)
+    date_requested = models.DateField(auto_now_add=True)
+    late = models.BooleanField(default=False)
+    schedule = models.TimeField(blank=False, null=False)
+
+
+    class Meta:
+        verbose_name = 'Borrowing'
+        verbose_name_plural = 'Borrowings'

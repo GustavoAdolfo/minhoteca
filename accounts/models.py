@@ -43,7 +43,7 @@ class MinhotecaUser(AbstractUser):
     is_active = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     email_confirmed = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(auto_now_add=True)
+    # date_joined = models.DateTimeField(auto_now_add=True)
     use_term_accepted_at = models.DateTimeField(
         null=False,
         blank=True,
@@ -52,7 +52,8 @@ class MinhotecaUser(AbstractUser):
     zip_code = models.CharField(max_length=8, null=True)
     address = models.CharField(max_length=100, null=True)
     address_number = models.CharField(max_length=10, null=True)
-    address_complement = models.CharField(max_length=50, null=True)
+    address_complement = models.CharField(
+        max_length=50, null=True, default=None)
     neighborhood = models.CharField(max_length=50, null=True)
     city = models.CharField(max_length=50, null=True)
     state = models.CharField(max_length=2, null=True, default='SP')
