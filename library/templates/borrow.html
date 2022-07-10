@@ -36,11 +36,35 @@
             </div>
         </div>
     </form>
+    {% if context.form.errors %}
+    <div class="row mt-2 p-2">
+        <div class="col col-12">
+            <div class="alert alert-danger">
+                {{ context.form.errors.date_borrowed }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endif %}
 
 {% if borrowed %}
-{{ borrowed }}
-{% endif %}
+<div class="container mx-auto shadow p-4 w-75">
+    <h4>Você já tem um empréstimo ativo</h4>
+    <p>Você só poderá pedir outro empréstimo quando devolver o livro atual.</p>
 
-{% endblock %}
+    <div class="row">
+        <div class="col col12">
+            <h6>{{ borrowed.book.title }}</h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-12">
+            <strong>Data do empréstimo: </strong>{{ borrowed.date_borrowed|date:"D d/M/Y" }} <br />
+            <strong>Data de prevista da devolução: </strong>{{ borrowed.return_forecast|date:"D d/M/Y" }} às
+            {{borrowed.schedule|date:"H:i"}}<br />
+        </div>
+    </div>
+    {% endif %}
+
+    {% endblock %}

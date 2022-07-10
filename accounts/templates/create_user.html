@@ -3,7 +3,7 @@
         {% csrf_token %}
         <div class="row mb-4">
             <div class="col col-8 offset-2">
-                <label for="{{form.email.name}}"
+                <label for="id_{{form.email.name}}"
                     class="form-label">{{form.email.label}}{{form.user_term_accept.label_suffix}}</label>
                 <input type="email" name="{{form.email.name}}" id="id_{{form.email.name}}" class="form-control"
                     autofocus placeholder="seu@email.com.br" required
@@ -17,7 +17,7 @@
         </div>
         <div class="row mb-4">
             <div class="col col-8 offset-2">
-                <label for="{{form.password1.name}}"
+                <label for="id_{{form.password1.name}}"
                     class="form-label">{{form.password1.label}}{{form.user_term_accept.label_suffix}}</label>
                 <input type="password" name="{{form.password1.name}}" id="id_{{form.password1.name}}"
                     class="form-control" required>
@@ -30,7 +30,7 @@
         </div>
         <div class="row mb-4">
             <div class="col col-8 offset-2">
-                <label for="{{form.password2.name}}"
+                <label for="id_{{form.password2.name}}"
                     class="form-label">{{form.password2.label}}{{form.user_term_accept.label_suffix}}</label>
                 <input type="password" name="{{form.password2.name}}" id="id_{{form.password2.name}}"
                     class="form-control" required>
@@ -46,7 +46,7 @@
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="id_{{form.user_term_accept.name}}"
                         name="user_term_accept" required>
-                    <label class="form-check-label" for="{{form.user_term_accept.name}}">
+                    <label class="form-check-label" for="id_{{form.user_term_accept.name}}">
                         {{form.user_term_accept.label}}
                     </label>
                 </div>

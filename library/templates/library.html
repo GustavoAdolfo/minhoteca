@@ -85,7 +85,9 @@
                 <tr colspan="3">Ainda não há livros cadastrados.</tr>
                 {% endfor %}
             </tbody>
-            <tfoot></tfoot>
+            <tfoot>
+                {{ form.as_p }}
+            </tfoot>
         </table>
     </div>
     {% include 'nav_footer.html' with navegador=books %}

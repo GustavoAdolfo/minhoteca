@@ -7,10 +7,12 @@
     <div class="row justify-content-md-center">
         <div class="col col-sm-12 col-md-7">
             <section id="landing">
-                <h5 class="shadow bg-body p-3 mb-3">Há no momento {{books_count}} livros disponíveis de
-                    {{authors_count}} autores
-                    diferentes</h5>
-
+                <h1 class="shadow bg-body p-3 mb-2">
+                    Olá, esta é a Minhoteca!<br />
+                    <small>Há no momento {{books_count}} livros disponíveis de
+                        {{authors_count}} autores
+                        diferentes</small>
+                </h1>
                 <div class="">
                     <div>
                         <p>
@@ -24,7 +26,7 @@
                         </p>
                     </div>
                 </div>
-                <h5 class="shadow bg-body  p-3 my-3">Funciona assim:</h5>
+                <h2 class="shadow bg-body  p-3 my-3">Funciona assim:</h2>
                 <div class="my-2">
                     <div class="d-flex transparent">
                         <ul class="list-group list-group-flush small transparent">
@@ -72,29 +74,32 @@
             {% include 'create_user.html' %}
             {% else %}
             <div class="shadow p-3 mb-5" id="estatisticas">
-                <h5 class="p-2 mb-1">Estatísticas</h5>
+                <h3 class="p-2 mb-1">Estatísticas</h3>
                 <div class="row">
                     <div class="col col-12">
-                        <span class="label-estatistica">Empréstimos</span><span class="valor-estatistica">0</span>
+                        <span class="label-estatistica">Empréstimos</span>
+                        <span class="valor-estatistica">{{stats.borrows}}</span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col col-12">
-                        <span class="label-estatistica">Perdas</span><span class="valor-estatistica negativo">0</span>
+                        <span class="label-estatistica">Perdas</span>
+                        <span class="valor-estatistica negativo">{{stats.loses}}</span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col col-12">
-                        <span class="label-estatistica">Usuários</span><span class="valor-estatistica">0</span>
+                        <span class="label-estatistica">Usuários</span>
+                        <span class="valor-estatistica">{{stats.users}}</span>
                     </div>
                 </div>
             </div>
             {% endif %}
 
             <div class="shadow p-3 mb-5 recados">
-                <h6>
+                <h3>
                     Quer ajudar a espalhar essa ideia?
-                </h6>
+                </h3>
                 <p>Disponibilize uma "minhoteca" no seu bairro, condomínio, empresa, ou qualquer área
                     delimitada
                     por você. Se você entende um pouco que seja de desenvolvimento de software, o código
@@ -113,9 +118,9 @@
                             SUA</strong>.</span></p>
             </div>
             <div class="shadow p-3 mb-5 recados">
-                <h6>
+                <h3>
                     Já ouviu falar da PLV?
-                </h6>
+                </h3>
                 <p>A <strong>Plataforma Livros Viajantes</strong> pretende espalhar o hábito da leitura e as
                     iniciativas literárias por todo o país e ainda ajudar o mercado editorial brasileiro a
                     evoluir nesses "tempos digitais". Para saber mais acesse <a

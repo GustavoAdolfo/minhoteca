@@ -1,6 +1,4 @@
 from datetime import datetime, timedelta
-from multiprocessing.sharedctypes import Value
-from sched import scheduler
 from django import forms
 from django.forms.models import ModelForm
 from django.contrib.auth import get_user_model
@@ -65,9 +63,11 @@ class BorrowingForm(ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        date_borrowed = cleaned_data.get('date_borrowed')
+        date_borrowed = datetime.strptime(
+                        cleaned_data.get('date_borrowed'),
+                        '%d/%m/%Y')
         date_returned = cleaned_data.get('date_returned')
-        if date_borrowed > date_returned:
+        if date_returned is not None and date_borrowed < date_returned:
             raise forms.ValidationError(
                 'Date borrowed must be before date returned')
             

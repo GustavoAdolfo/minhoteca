@@ -2,7 +2,7 @@ import operator
 import json
 import logging
 import environ
-from socketserver import DatagramRequestHandler
+from datetime import datetime, timedelta
 from django.utils.html import strip_tags
 from django.core import mail
 from django.template.loader import render_to_string
@@ -16,6 +16,8 @@ from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.storage import staticfiles_storage
+
+from accounts.models import MinhotecaUser
 from .models import Book, Author, Borrowing
 from .forms import BorrowingForm
 
@@ -249,12 +251,12 @@ def _request_borrowing(request):
     if borrowed:
         return render(request, 'borrow.html', {'borrowed': borrowed})
 
+    book_id = request.GET.get('book')
     if not book_id:
         messages.add_message(
             request, messages.WARNING, 'Informe um livro para empréstimo.')
         return redirect('library:index')
 
-    book_id = request.GET.get('book')
     selected_book = Book.objects.filter(id=book_id).first()
     if selected_book.is_available:
         form = BorrowingForm()
@@ -272,37 +274,58 @@ def _request_borrowing(request):
 
 
 def _save_borrowing(request):
-    form = BorrowingForm(request.POST)
     try:
-        if form.is_valid():
-            new_borrow = form.save()
-            borrower = request.user
-            if new_borrow:
-                current_site = get_current_site(request)
-                subject = 'Você solicitou um livro emprestado na Minhoteca'
-                to_email = getattr(borrower, 'email')
-                message = render_to_string(
-                    'emails/account_activation_email.html',
-                    {
-                        'user': borrower,
-                        'domain': current_site.domain,
-                        'uid': '12345',
-                        'token': '12345'
-                    })
-                plain_message=strip_tags(message)
-                mail.send_mail(subject, plain_message,
-                    from_email=env('DEFAULT_FROM_EMAIL'),
-                    recipient_list=[to_email], html_message=message)
-                messages.add_message(
-                    request,
-                    messages.SUCCESS,
-                    'Sua solicitação foi registrada e uma confirmação enviada '
-                    'para o seu e-mail. No dia e hora marcados, compareça à '
-                    'estação Tamanduateí do Metrô de São Paulo para pegar o '
-                    'livro',
-                    extra_tags='safe')
-                return HttpResponseRedirect('/')
-        
+        data = {
+            'date_borrowed': datetime.strftime(
+                datetime.strptime(
+                    request.POST['date_borrowed'], '%d/%m/%Y'), '%Y-%m-%d'),
+            'book_id': request.POST['book_id'],
+            'borrower_id': request.POST['borrower_id'],
+            'schedule': request.POST['schedule']
+        }
+        book = Book.objects.filter(id=data['book_id']).first()
+        borrower = MinhotecaUser.objects.filter(id=data['borrower_id']).first()
+        return_forecast = datetime.strptime(
+                    request.POST['date_borrowed'], '%d/%m/%Y') + timedelta(
+                        days=14)
+        borrowing = Borrowing.objects.create(
+            book=book,
+            borrower=borrower,
+            date_borrowed=data['date_borrowed'],
+            schedule=data['schedule'],
+            return_forecast=return_forecast
+        )
+        borrowing.full_clean()
+        borrowing.save()
+        borrower = request.user
+        if borrowing:
+            current_site = get_current_site(request)
+            subject = 'Você solicitou um livro emprestado na Minhoteca'
+            to_email = getattr(borrower, 'email')
+            message = render_to_string(
+                'emails/borrowing_scheduled.html',
+                {
+                    'borrowing': borrowing,
+                    'user': borrower,
+                    'domain': current_site.domain
+                })
+            plain_message=strip_tags(message)
+            mail.send_mail(subject, plain_message,
+                from_email=env('DEFAULT_FROM_EMAIL'),
+                recipient_list=[to_email], html_message=message)
+            mail.send_mail(subject, plain_message,
+                from_email=env('DEFAULT_FROM_EMAIL'),
+                recipient_list=[env('DEFAULT_FROM_EMAIL'), env('SUPORT_EMAIL')], html_message=message)
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                'Sua solicitação foi registrada e uma confirmação enviada '
+                'para o seu e-mail. No dia e hora marcados, compareça à '
+                'estação Tamanduateí do Metrô de São Paulo para pegar o '
+                'livro',)
+                # extra_tags='safe')
+            return HttpResponseRedirect('/')
+
         selected_book = Book.objects.filter(
             id=form.cleaned_data['book_id']).first()
         context = {
@@ -317,16 +340,30 @@ def _save_borrowing(request):
             ('Ocorreu uma falha ao realizar a solicitação. '+
             'Por favor tente novamente mais tarde.')
         )
-        return HttpResponseRedirect('/')
+        form = BorrowingForm(request.POST)
+        selected_book = Book.objects.filter(
+            id=form.cleaned_data['book_id']).first()
+        context = {
+            'book_title': selected_book.title,
+            'form': form
+            }
+        return render(request, 'borrow.html', {'context': context})
 
 @login_required(login_url='/accounts/login/')
 def borrow(request):
     """Retorna o formulário de empréstimo ou o livro atualmente emprestado."""
     if request.method == 'POST':
         return _save_borrowing(request)
-    
-    return _request_borrowing(request)
-    
 
-def borrowers(request):
+    return _request_borrowing(request)
+
+
+def borrowing_queue(request):
     pass
+
+@login_required(login_url='/accounts/login/')
+def user_borrowings(request):
+    """Retorna os empréstimos do usuário."""
+    borrower = request.user
+    borrowings = Borrowing.objects.filter(borrower=borrower).order_by('-date_borrowed')
+    return render(request, 'borrowings.html', {'borrowings': borrowings})

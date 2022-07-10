@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from accounts.models import MinhotecaUser
 
@@ -64,7 +65,35 @@ class Borrowing(models.Model):
     date_requested = models.DateField(auto_now_add=True)
     late = models.BooleanField(default=False)
     schedule = models.TimeField(blank=False, null=False)
+    return_forecast = models.DateField(blank=False, null=False)
 
+    def status(self):
+        if self.date_returned and self.date_returned <= self.return_forecast:
+            return 'Devolvido antes do prazo'
+        elif self.date_returned and self.date_requested == self.return_forecast:
+            return 'Devolvido no prazo'
+        elif self.date_returned and self.date_returned > self.return_forecast:
+            self.late = True
+            self.save()
+            return 'Devolvido com atraso'
+        elif not self.date_returned and self.return_forecast < datetime.now().date():
+            self.late = True
+            self.save()
+            return 'Em atraso'
+        else:
+            return 'Aguardando devolução'
+
+    def css_status(self):
+        if self.date_returned and self.date_returned <= self.return_forecast:
+            return 'bg-success'
+        elif self.date_returned and self.date_requested == self.return_forecast:
+            return 'bg-info'
+        elif self.date_returned and self.date_returned > self.return_forecast:
+            return 'bg-warning'
+        elif not self.date_returned and self.return_forecast < datetime.now().date():
+            return 'bg-danger'
+        else:
+            return ''
 
     class Meta:
         verbose_name = 'Borrowing'

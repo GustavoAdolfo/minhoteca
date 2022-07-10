@@ -1,0 +1,101 @@
+{% autoescape off %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Minhoteca</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+        body {
+            background-color: #EDE0D4;
+            margin: auto;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Roboto', sans-serif;
+            color: #7F5539;
+        }
+
+        p {
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 2rem;
+        }
+
+        .button {
+            min-width: 100px;
+            background-color: #B08968;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: large;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="padding: 20px;">
+        <div style="text-align: center;">
+            <img src="https://{{ domain }}/imgs/minhoteca.svg" alt="Minhoteca" title="Minhoteca" style="width: 200px;">
+            <h1>Seu empréstimo está agendado</h1>
+        </div>
+        <p>Olá {{borrowed.borrower.name}},</p>
+        <p>Você tem um empréstimo agendado para {{ borrowing.date_borrowed|date:"D d/M/Y" }} às
+            {{ borrowing.schedule|date:"H:i"}}, do livro <strong>{{ borrowing.book.title }}</strong>.</p>
+        <p>Não deixe de comparecer! <strong>Não haverá segunda tentativa de entrega.</strong></p>
+        <h4>Lembre-se: a devolução está agendada para {{borrowing.return_forecast|date:"D d/M/Y"}} às
+            {{ borrowing.schedule|date:"H:i"}}. Não atrase!</h4>
+        <p>
+            Compareça na estação Tamanduateí do metrô no dia e hora marcados para receber o livro de nosso
+            representante e no dia e hora para devolvê-lo.
+        </p>
+        <p>
+            Acompanhe seus empréstimos: https://{{ domain }}/books/borrowings
+        </p>
+
+        <hr />
+        <h1>CUIDADOS COM O LIVRO</h1>
+        <h3>Leia com bastante atenção!</h3>
+        <ul>
+            <li>Se pegou emprestado, devolva.</li>
+            <li>Trate o livro alheio como gostaria que o seu fosse tratado. Não rasure, suje ou rasgue. Mas se você não
+                se importa, RESPEITE a importância que outros dão e trate de ter esse zêlo.</li>
+            <li>Só pegue emprestado se for mesmo ler. Não jogue em um canto ou o abandone de qualquer modo "pra depois".
+            </li>
+            <li>Se perdeu, compre outro e devolva. Não abuse da boa vontade alheia.</li>
+            <li>Se danificou, compre outro e devolva. Não abuse da boa vontade alheia.</li>
+            <li>Se não puder devolver o livro na data e hora marcadas, entre em contato para avisar e negociar com
+                antecedência.</li>
+            <li>Se pegou por impulso e sabe que não vai ler, devolva o mais rápido possível.</li>
+            <li>Se vai pegar sucessivamente emprestado, está na hora de comprar seu próprio exemplar.</li>
+            <li>Se for uma ferramenta de trabalho, seja rápido (e considere comprar um exemplar pra você).</li>
+            <li>Não tente pedir outro empréstimo sem devolver o anterior.</li>
+            <li><strong>NUNCA</strong> empreste livros que pegou emprestado.</li>
+            <li>Atrasar a devolução é o mesmo que não devolver.</li>
+            <li>"Esquecer" de devolver é o mesmo que... "agir de má fé" (pra não dizer: <em>surrupiar, trapacear,
+                    aplicar um golpe, causar engodo...</em>).</li>
+            <li>Não misture com seus livros.</li>
+            <li>Não manusei com as mãos sujas, suadas, enquanto se alimenta.</li>
+            <li>Se gosta de ler em trânsito, tudo bem, mas se certifique de que o livro estará bem protegido para não
+                ser manchado de suor, molhado pela chuva ou entrar em contato com qualquer substância e/ou superfície
+                que
+                o danifique</li>
+            <li>Se não sabe como proteger o livro, não pegue emprestado.</li>
+            <li>Você o receberá envolvido e protegido em plástico, devolva-o da mesma maneira.</li>
+            <li>Se for percebido que você descumpriu qualquer dessas regras, não poderá mais pegar outros livros
+                emprestados.</li>
+        </ul>
+
+        <h4>Lembre-se também: <em>gentileza gera gentileza.</em></h4>
+</body>
+
+</html>
+{% endautoescape off %}

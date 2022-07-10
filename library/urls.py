@@ -11,5 +11,6 @@ urlpatterns = [
     path('authors/', views.authors, name='authors'),
     path('authors/search/', views.search_authors, name='search_authors'),
     path('borrow/', views.borrow, name='borrow'),
-    path('borrowing-queue/', views.borrowers, name='borrowing_queue'),
+    path('borrowing-queue/', views.borrowing_queue, name='borrowing_queue'),
+    path('borrowings', views.user_borrowings, name='borrowings'),
 ]

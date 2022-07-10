@@ -231,7 +231,7 @@ def changepassword(request):
     return render(request, 'changepassword.html', context)
 
 
-def reset_password_confirm(request, uidb64=None, token=None,
+def reset_password_confirm(request, uidb64, token,
                            token_generator=default_token_generator):
     """
     View that checks the hash in a password reset link and presents a

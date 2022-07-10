@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Solicitação de Empréstimo{% endblock %}
+
+{% block content %}
+
+{% if borrowings %}
+<div class="container mx-auto shadow p-4 w-75">
+    <h4>Seu histórico de empréstimos</h4>
+    <p>Lembre-se: você só poderá pedir outro empréstimo quando devolver o livro atual.</p>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Título</th>
+                <th scope="col">Data de Empréstimo</th>
+                <th scope="col">Data de Devolução</th>
+                <th scole="col">Situação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for borrowing in borrowings %}
+            <tr>
+                <td>{{ borrowing.book.title }}</td>
+                <td>{{ borrowing.date_borrowed|date:"d/m/Y" }}</td>
+                <td>{{ borrowing.return_forecast|date:"d/m/Y" }}</td>
+                <td class="{{borrowing.css_status}}">{{ borrowing.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </thead>
+    </table>
+
+    {% endif %}
+
+    {% endblock %}

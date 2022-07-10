@@ -1,6 +1,6 @@
 {% load static %}
 {% load sass_tags %}
-<html>
+<html lang="pt-br">
 
 <head>
     <meta charset="utf-8">
@@ -52,7 +52,7 @@
                         {% endif %}
 
                         <li class="list-group-item list-group-item-action
-                            {% if "books" in request.path and not "author" in request.path %} active
+                            {% if "books" in request.path and not "author" in request.path and not 'borrowings' in request.path %} active
                             {% endif %}"><a href="{% url 'library:books' %}" class="nav-link btn">Livros</a></li>
                         <li class="list-group-item list-group-item-action
                             {% if "books" in request.path and "authors" in request.path %} active {% endif %}">
@@ -65,6 +65,10 @@
                             {% if "accounts" in request.path and "profile" in request.path %} active {% endif %}"><a
                                 href="{% url 'accounts:profile' %}" class="nav-link btn">Perfil</a>
                         </li>
+                        <li class="list-group-item list-group-item-action
+                            {% if "borrowings" in request.path and "books" in request.path %} active {% endif %}"><a
+                                href="{% url 'library:borrowings' %}" class="nav-link btn">Empréstimos</a>
+                        </li>
                         <li class="list-group-item list-group-item-action"><a href="{% url 'accounts:logout' %}"
                                 class="nav-link btn">Sair</a></li>
                         {% endif %}
@@ -75,10 +79,8 @@
                 {% if messages %}
                 {% for message in messages %}
                 <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-                    {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    {% if 'safe' in message.extra_tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 {% endfor %}
                 {% endif %}
