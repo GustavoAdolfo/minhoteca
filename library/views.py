@@ -1,9 +1,10 @@
+from datetime import datetime, timedelta
 import operator
 import json
 import logging
 import environ
-from datetime import datetime, timedelta
 from django.utils.html import strip_tags
+from django.db.models import Max
 from django.core import mail
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
@@ -18,7 +19,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.storage import staticfiles_storage
 
 from accounts.models import MinhotecaUser
-from .models import Book, Author, Borrowing
+from .models import Book, Author, Borrowing, QueueBorrowing
 from .forms import BorrowingForm
 
 env = environ.Env()
@@ -145,8 +146,9 @@ def author(request, id:int):
 def authors(request):
     """Lista autores cadastrados."""
     order = request.GET.get('ord')
-    authors_data = Author.objects.order_by(
-        'name').filter(book__is_available=True)
+    authors_data = Author.objects.order_by('name')\
+        .filter(book__is_available=True)
+    authors_data = set(authors_data)
     if order and order == '2':
         ordered_list = sorted(
             authors_data, key=operator.attrgetter('name'), reverse=True)
@@ -193,12 +195,11 @@ def search_authors(request):
             return redirect('library:authors')
 
         fields = Concat('name', Value(' '), 'country')
-        authors_data = Author.objects.order_by(
-            'name').annotate(
-                author_country=fields).filter(
-            author_country__icontains=expression,
-            book__is_available=True
-        )
+        authors_data = Author.objects.order_by('name')\
+            .annotate(author_country=fields).filter(
+                author_country__icontains=expression,
+                book__is_available=True)
+        authors_data = set(authors_data)
         if not authors_data or not len(authors_data):
             messages.add_message(
                 request, messages.WARNING,
@@ -297,6 +298,8 @@ def _save_borrowing(request):
         )
         borrowing.full_clean()
         borrowing.save()
+        book.borrowed = True
+        book.save()
         borrower = request.user
         if borrowing:
             current_site = get_current_site(request)
@@ -352,6 +355,19 @@ def _save_borrowing(request):
 @login_required(login_url='/accounts/login/')
 def borrow(request):
     """Retorna o formulário de empréstimo ou o livro atualmente emprestado."""
+    borrower = request.user
+    profile_level = _get_profile_level(borrower)
+    if profile_level < 100:
+        messages.add_message(
+            request, messages.WARNING, 'Para solicitar empréstimos, '
+            'complete seu perfil e aguarde aprovação.')
+        return redirect('accounts:profile')
+    if not borrower.can_borrow:
+        messages.add_message(
+            request, messages.WARNING, 'Aguarde a aprovação do seu cadastro' +
+            ' para solicitar empréstimos.')
+        return redirect('library:books')
+
     if request.method == 'POST':
         return _save_borrowing(request)
 
@@ -359,11 +375,67 @@ def borrow(request):
 
 
 def borrowing_queue(request):
-    pass
+    if request.method == 'POST':
+        data = {}
+        return render(request, 'queue_borrowing.html', {'confirmation': data})
+    else:
+        book_id = request.GET['book']
+        if not book_id:
+            messages.add_message(
+                request, messages.WARNING,
+                'Selecione o livro que deseja solicitar.')
+            return redirect('library:books')
+
+        book_item = Book.objects.filter(id=book_id).first()
+        if not book_item:
+            messages.add_message(
+                request, messages.WARNING,
+                'Livro não encontrado.')
+            return redirect('library:books')
+
+        borrow_item = Borrowing.objects.filter(book=book_item).filter(
+            date_returned__isnull=True).first()
+        if not borrow_item:
+            messages.add_message(
+                request, messages.INFO,
+                'Este livro não está emprestado. Você pode fazer a solicitação.')
+            return redirect('library:borrow')
+
+        return_forecast = borrow_item.return_forecast
+
+        queue = QueueBorrowing.objects.filter(book=book_item)
+        total_members = queue.count()
+        expected_date = queue.aggregate(Max('expected_date'))['expected_date__max']
+
+        next_date = expected_date + timedelta(days=7) \
+            if expected_date else return_forecast + timedelta(days=7)
+
+        data = {
+            'book': book_item,
+            'members': total_members,
+            'next_date': next_date
+        }
+
+        return render(request, 'queue_borrowing.html', {'context': data})
+
+
+def _get_profile_level(user):
+    profile_complete = 8
+    profile_weight = 0
+    profile_weight += 1 if user.first_name else 0
+    profile_weight += 1 if user.contact_phone else 0
+    profile_weight += 1 if user.email else 0
+    profile_weight += 1 if user.zip_code else 0
+    profile_weight += 1 if user.address else 0
+    profile_weight += 1 if user.city else 0
+    profile_weight += 1 if user.address_number else 0
+    profile_weight += 1 if user.state else 0
+    return (100 * profile_weight) // profile_complete
 
 @login_required(login_url='/accounts/login/')
 def user_borrowings(request):
     """Retorna os empréstimos do usuário."""
     borrower = request.user
-    borrowings = Borrowing.objects.filter(borrower=borrower).order_by('-date_borrowed')
+    borrowings = Borrowing.objects.filter(borrower=borrower).order_by(
+        'date_borrowed')
     return render(request, 'borrowings.html', {'borrowings': borrowings})

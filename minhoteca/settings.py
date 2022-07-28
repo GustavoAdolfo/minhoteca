@@ -34,7 +34,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -50,7 +49,6 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -86,7 +84,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'minhoteca.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -106,8 +103,6 @@ DATABASES = {
         'PORT': 3306
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -153,8 +148,11 @@ SASS_PROCESSOR_ROOT = Path.joinpath(BASE_DIR, 'static')
 STATIC_ROOT = Path.joinpath(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static', 'data'),
-    os.path.join(BASE_DIR, 'static', 'js'),
+    os.path.join(BASE_DIR, 'static_dev'),
+    os.path.join(BASE_DIR, 'static_dev', 'data'),
+    os.path.join(BASE_DIR, 'static_dev', 'js'),
+    os.path.join(BASE_DIR, 'static_dev', 'imgs'),
+    os.path.join(BASE_DIR, 'static_dev', 'admin'),
 ]
 
 # Default primary key field type

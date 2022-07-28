@@ -61,15 +61,15 @@ def create_user(request):
                     messages.SUCCESS,
                     'Foi enviado um e-mail de confirmação com instruções para '+
                     'validar sua conta.<br/>Aguardo você em breve!',
-                    extra_tags='safe')
+                    extra_tags='success safe')
                 messages.add_message(
                     request,
                     messages.INFO,
                     'Você só poderá solicitar empréstimos após ' +
                     'completar seu perfil e ter seu cadastro aprovado.',
-                    extra_tags='safe')
+                    extra_tags='info safe')
                 return HttpResponseRedirect('/')
-        
+
         return render(request, 'account.html', {'form': form})
     except Exception as error:
         log.error(error)
@@ -160,19 +160,16 @@ def _create_new_profile(request):
     profile_form = UserProfileForm(request.POST) #, request.FILES)
     if profile_form.is_valid():
         new_profile = profile_form.save(commit=False)
-        new_profile.can_borrow = \
-            len(new_profile.first_name.strip()) > 0 and \
-                len(new_profile.contact_phone.strip()) > 0 and \
-                    len(new_profile.last_name.strip()) > 0 and \
-                        len(new_profile.zip_code.strip()) > 0 and \
-                            len(new_profile.address.strip()) > 0 and \
-                                len(new_profile.city.strip()) > 0 and \
-                                    len(new_profile.address_number.strip()) > 0 and \
-                                        len(new_profile.state.strip()) > 0
+        # new_profile.can_borrow = \
+        #     len(new_profile.first_name.strip()) > 0 and \
+        #         len(new_profile.contact_phone.strip()) > 0 and \
+        #             len(new_profile.last_name.strip()) > 0 and \
+        #                 len(new_profile.zip_code.strip()) > 0 and \
+        #                     len(new_profile.address.strip()) > 0 and \
+        #                         len(new_profile.city.strip()) > 0 and \
+        #                             len(new_profile.address_number.strip()) > 0 and \
+        #                                 len(new_profile.state.strip()) > 0
         new_profile.save()
-        # # Get the current instance object to display in the template
-        # img_obj = form.instance
-        # # return render(request, 'index.html', {'form': form, 'img_obj': img_obj})
 
 @login_required(login_url='/accounts/login/')
 def edit_profile(request):
@@ -205,6 +202,8 @@ def edit_profile(request):
             _create_new_profile(request)
             messages.add_message(request, messages.SUCCESS,
                                     'Perfil criado com sucesso!')
+            messages.add_message(request, messages.INFO, 'Em breve você ' +
+            'receberá um e-mail confirmando a aprovação para emprestímo.')
             return HttpResponseRedirect('/')
     except Exception as error:
         log.error(error)

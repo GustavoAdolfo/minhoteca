@@ -6,3 +6,5 @@ geckodriver.log
 **TODO
 *.map
 **.env
+**settings.py.prd
+**.env.prd

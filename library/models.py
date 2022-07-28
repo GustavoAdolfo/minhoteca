@@ -98,3 +98,15 @@ class Borrowing(models.Model):
     class Meta:
         verbose_name = 'Borrowing'
         verbose_name_plural = 'Borrowings'
+
+
+class QueueBorrowing(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.DO_NOTHING)
+    borrower = models.ForeignKey(MinhotecaUser, on_delete=models.DO_NOTHING)
+    date_requested = models.DateField(blank=True, null=True)
+    expected_date = models.DateField(blank=True, null=True)
+    concluded = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = 'QueueBorrowing'
+        verbose_name_plural = 'QueueBorrowings'

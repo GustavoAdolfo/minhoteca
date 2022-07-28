@@ -39,7 +39,7 @@
                         {% if profile_form.email.errors %}
                         border border-danger
                         {% endif %}" id="{{profile_form.email.name}}" name="{{profile_form.email.name}}"
-                            value="{{ profile_form.email.value|default_if_none:"" }}">
+                            value="{{ profile_form.email.value|default_if_none:"" }}" disabled>
                         <span class="help-block
                         {% if profile_form.email.errors %}
                             text-danger small

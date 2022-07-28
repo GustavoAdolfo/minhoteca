@@ -11,7 +11,7 @@ class UserManager(BaseUserManager):
             raise ValueError('Users must have a valid email address.')
         if not password:
             raise ValueError('Users must have a valid password.')
-        
+
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
@@ -58,7 +58,7 @@ class MinhotecaUser(AbstractUser):
     city = models.CharField(max_length=50, null=True)
     state = models.CharField(max_length=2, null=True, default='SP')
     can_borrow = models.BooleanField(default=False)
-    
+
 
     REQUIRED_FIELDS = []
     USERNAME_FIELD = 'email'

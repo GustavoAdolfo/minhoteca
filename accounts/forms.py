@@ -3,6 +3,7 @@ from django.forms.models import ModelForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import get_user_model
+from django.utils.safestring import mark_safe
 from .models import MinhotecaUser as MinhotecaUser
 # from captcha.fields import CaptchaField
 
@@ -13,7 +14,8 @@ class CreateUserForm(UserCreationForm):
     # secret key = 6LfI738gAAAAAM6mEDXnCPNziPeBy8D_aaB4WT_m
     email = forms.EmailField(label='Email')
     user_term_accept = forms.BooleanField(
-        required=True, label='Li e aceito os termos de uso')
+        required=True, label=mark_safe('Li e aceito os <a href="#">termos de uso</a>')
+        )
 
     def save(self, commit=True):
         if not self.cleaned_data['user_term_accept']:
@@ -32,6 +34,15 @@ class CreateUserForm(UserCreationForm):
 
 class UserProfileForm(ModelForm):
     id = forms.CharField(widget=forms.HiddenInput())
+    zip_code = forms.CharField(required=True, label='CEP')
+    contact_phone = forms.CharField(max_length=11, label='Celular')
+    address = forms.CharField(max_length=100, label='Endereço')
+    address_number = forms.CharField(max_length=10, label='Número')
+    address_complement = forms.CharField(max_length=50,
+    label='Complemento', required=False)
+    neighborhood = forms.CharField(max_length=50, label='Bairro')
+    city = forms.CharField(max_length=50, label='Cidade')
+    state = forms.CharField(max_length=2, label='UF')
 
     class Meta:
         model = MinhotecaUser

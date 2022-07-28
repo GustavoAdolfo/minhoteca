@@ -55,10 +55,11 @@
                     <td class="">
                         <a href="{% url 'library:book' book.id %}"
                             class="livro {% if book.borrowed %}text-light{% endif %}">
-                            <h5 class="">{{ book.title }}</h5>
-                            {% if book.subtitle %}
-                            <h6 class="">{{ book.subtitle }}</h6>
-                            {% endif %}
+                            <h5 class="">{{ book.title }}
+                                {% if book.subtitle %}
+                                <small> - {{ book.subtitle }}</small>
+                                {% endif %}
+                            </h5>
                         </a>
                     </td>
                     <td>

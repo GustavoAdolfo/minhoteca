@@ -4,10 +4,12 @@
   --bs-secondary: #AFBAE9;
   --bs-success: #AFD2E9;
   --bs-info: #B5E9AF;
+  --bs-warning: #ddbf3a;
   --bs-primary-rgb: 130, 116, 53;
   --bs-secondary-rgb: 175, 186, 233;
   --bs-success-rgb: 175, 210, 233;
   --bs-info-rgb: 181, 233, 175;
+  --bs-warning-rgb: 221, 191, 58;
   --bs-body-color-rgb: 38, 25, 12;
   --bs-body-bg-rgb: 232, 232, 232;
   --bs-body-color: #26190C;
@@ -52,6 +54,9 @@ h6 {
 h1 > small {
   line-height: 200%;
   font-size: 1.15rem; }
+
+h5 > small {
+  font-size: 80% !important; }
 
 a {
   color: var(--minhoteca-title-color-dark);
