@@ -160,6 +160,7 @@ def _create_new_profile(request):
     profile_form = UserProfileForm(request.POST) #, request.FILES)
     if profile_form.is_valid():
         new_profile = profile_form.save(commit=False)
+        new_profile.email = request.user.email
         # new_profile.can_borrow = \
         #     len(new_profile.first_name.strip()) > 0 and \
         #         len(new_profile.contact_phone.strip()) > 0 and \

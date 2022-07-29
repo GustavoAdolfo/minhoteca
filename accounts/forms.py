@@ -47,15 +47,12 @@ class UserProfileForm(ModelForm):
     class Meta:
         model = MinhotecaUser
         # model.state = "SP"
-        fields = ['email', 'first_name', 'last_name', 'contact_phone',
+        fields = ['first_name', 'last_name', 'contact_phone',
             'zip_code', 'address', 'address_number', 'city', 'state',
             'address_complement', 'neighborhood']
-            
+
     def save(self, commit=True):
         user = MinhotecaUser.objects.get(id=self.cleaned_data['id'])
-        email = self.cleaned_data['email']
-        if email != user.email:
-            user.email = email
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
         user.contact_phone = self.cleaned_data['contact_phone']
@@ -77,9 +74,9 @@ class UserProfileForm(ModelForm):
                                         len(user.state.strip()) > 0
         if commit:
             user.save()
-        
+
         return user
-        
+
 
 class PwdChangeForm(PasswordChangeForm):
 
