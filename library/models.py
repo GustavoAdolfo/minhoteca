@@ -11,7 +11,7 @@ class Author(models.Model):
 
     def __str__(self):
         return str(self.name)
-    
+
     def count_books(self):
         return self.book_set.filter(is_available=True).count()
 
@@ -103,7 +103,7 @@ class Borrowing(models.Model):
 class QueueBorrowing(models.Model):
     book = models.ForeignKey(Book, on_delete=models.DO_NOTHING)
     borrower = models.ForeignKey(MinhotecaUser, on_delete=models.DO_NOTHING)
-    date_requested = models.DateField(blank=True, null=True)
+    date_requested = models.DateField(blank=True, default=datetime.now().date())
     expected_date = models.DateField(blank=True, null=True)
     concluded = models.BooleanField(default=False)
 

@@ -376,47 +376,89 @@ def borrow(request):
 
 def borrowing_queue(request):
     if request.method == 'POST':
-        data = {}
-        return render(request, 'queue_borrowing.html', {'confirmation': data})
-    else:
-        book_id = request.GET['book']
-        if not book_id:
+        user = request.user
+        book_id = request.POST['book_id']
+        next_date = datetime.strftime(datetime.strptime(
+            request.POST['next_date'], '%d/%m/%Y'), '%Y-%m-%d')
+        selected_book = Book.objects.filter(id=book_id).first()
+        if not selected_book:
+            messages.add_message(
+                request, messages.WARNING, 'Livro não encontrado.')
+            return redirect('library:books')
+        exist = QueueBorrowing.objects.filter(
+            book=selected_book,
+            borrower=user,
+            concluded=False).exists()
+        if exist:
             messages.add_message(
                 request, messages.WARNING,
-                'Selecione o livro que deseja solicitar.')
+                'Você já está na espera por esse livro.')
             return redirect('library:books')
 
-        book_item = Book.objects.filter(id=book_id).first()
-        if not book_item:
-            messages.add_message(
-                request, messages.WARNING,
-                'Livro não encontrado.')
-            return redirect('library:books')
-
-        borrow_item = Borrowing.objects.filter(book=book_item).filter(
-            date_returned__isnull=True).first()
-        if not borrow_item:
-            messages.add_message(
-                request, messages.INFO,
-                'Este livro não está emprestado. Você pode fazer a solicitação.')
-            return redirect('library:borrow')
-
-        return_forecast = borrow_item.return_forecast
-
-        queue = QueueBorrowing.objects.filter(book=book_item)
-        total_members = queue.count()
-        expected_date = queue.aggregate(Max('expected_date'))['expected_date__max']
-
-        next_date = expected_date + timedelta(days=7) \
-            if expected_date else return_forecast + timedelta(days=7)
-
-        data = {
-            'book': book_item,
-            'members': total_members,
-            'next_date': next_date
+        queue = QueueBorrowing.objects.create(
+            borrower=user,
+            book=selected_book,
+            expected_date=next_date)
+        queue.full_clean()
+        queue.save()
+        positions = QueueBorrowing.objects.filter(
+            book__id=book_id, concluded=False).count()
+        data ={
+            'position': positions,
+            'queue': queue
         }
+        return render(
+            request,
+            'queue_borrowing.html',
+            {'confirmation': data })
+    
+    book_id = request.GET['book']
+    if not book_id:
+        messages.add_message(
+            request, messages.WARNING,
+            'Selecione o livro que deseja solicitar.')
+        return redirect('library:books')
 
-        return render(request, 'queue_borrowing.html', {'context': data})
+    book_item = Book.objects.filter(id=book_id).first()
+    if not book_item:
+        messages.add_message(
+            request, messages.WARNING,
+            'Livro não encontrado.')
+        return redirect('library:books')
+
+    borrower = request.user
+    is_borrowed = Borrowing.objects.filter(
+        borrower=borrower, book=book_item, date_returned=None).exists()
+    if is_borrowed:
+        messages.add_message(
+            request, messages.WARNING,
+            'Você já está com esse livro.')
+        return redirect('library:books')
+
+    borrow_item = Borrowing.objects.filter(book=book_item).filter(
+        date_returned__isnull=True).first()
+    if not borrow_item:
+        messages.add_message(
+            request, messages.INFO,
+            'Este livro não está emprestado. Você pode fazer a solicitação.')
+        return redirect('library:borrow')
+
+    return_forecast = borrow_item.return_forecast
+
+    queue = QueueBorrowing.objects.filter(book=book_item)
+    total_members = queue.count()
+    expected_date = queue.aggregate(Max('expected_date'))['expected_date__max']
+
+    next_date = expected_date + timedelta(days=7) \
+        if expected_date else return_forecast + timedelta(days=7)
+
+    data = {
+        'book': book_item,
+        'members': total_members,
+        'next_date': next_date
+    }
+
+    return render(request, 'queue_borrowing.html', {'context': data})
 
 
 def _get_profile_level(user):
