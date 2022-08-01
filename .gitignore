@@ -8,3 +8,6 @@ geckodriver.log
 **.env
 **settings.py.prd
 **.env.prd
+.venv
+setup.sh
+
