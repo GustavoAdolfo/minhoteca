@@ -10,4 +10,4 @@ geckodriver.log
 **.env.prd
 .venv
 setup.sh
-
+static/
