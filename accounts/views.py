@@ -53,9 +53,12 @@ def create_user(request):
                 mail.send_mail(subject, plain_message,
                     from_email=env('DEFAULT_FROM_EMAIL'),
                     recipient_list=[to_email], html_message=message)
-                # email = EmailMessage(subject, message, to=[to_email])
-                # email.send()
-                # new_user.email_user(subject, message)
+                admin_message = f"Novo usuário cadastrado: {new_user.email}"
+                mail.send_mail("Novo usuário na minhoteca",
+                    admin_message,
+                    from_email=env('DEFAULT_FROM_EMAIL'),
+                    recipient_list=[env('DEFAULT_FROM_EMAIL'),
+                        "gustavo.adolfo.as@gmail.com"])
                 messages.add_message(
                     request,
                     messages.SUCCESS,
@@ -80,13 +83,55 @@ def create_user(request):
         )
         return render(request, 'account.html', {'form': form})
 
+def reconfirmation(request):
+    if request.method == 'GET':
+        return render(request, 'reconfirmation.html')
+    try:
+        reconfirm_email = request.POST.get('email')
+        new_user = MinhotecaUser.objects.get(email=reconfirm_email)
+        current_site = get_current_site(request)
+        subject = 'Confirme seu cadastro na Minhoteca'
+        to_email = new_user.email
+        message = render_to_string(
+            'emails/account_activation_email.html',
+            {
+                'user': new_user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(new_user.pk)),
+                'token': account_activation_token.make_token(new_user),
+            })
+        plain_message=strip_tags(message)
+        mail.send_mail(subject, plain_message,
+            from_email=env('DEFAULT_FROM_EMAIL'),
+            recipient_list=[to_email], html_message=message)
+
+        admin_message = f"Novo usuário cadastrado: {new_user.email}"
+        mail.send_mail("Novo usuário na minhoteca",
+            admin_message, from_email=env('DEFAULT_FROM_EMAIL'),
+            recipient_list=[env('DEFAULT_FROM_EMAIL'),
+            "gustavo.adolfo.as@gmail.com"])
+
+        messages.add_message(request, messages.SUCCESS,
+            'Foi enviado um e-mail de confirmação com instruções para '+
+            'validar sua conta.<br/>Aguardo você em breve!',
+            extra_tags='success safe')
+        messages.add_message(request, messages.INFO,
+            'Você só poderá solicitar empréstimos após ' +
+            'completar seu perfil e ter seu cadastro aprovado.',
+            extra_tags='info safe')
+        return HttpResponseRedirect('/')
+    except Exception as error:
+        log.error(error)
+        messages.warning(request,
+            ('Ocorreu uma falha ao tentar recuperar seu cadastro. '+
+            'Por favor tente novamente mais tarde.'))
 
 
 def confirmation(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = MinhotecaUser.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError): #MinhotecaUser.DoesNotExist
+    except: # (TypeError, ValueError, OverflowError): #MinhotecaUser.DoesNotExist
         user = None
 
     if user is not None and account_activation_token.check_token(user, token):
@@ -102,8 +147,9 @@ def confirmation(request, uidb64, token):
         messages.warning(
             request, (
                 'O link de confirmação é inválido, possivelmente ' +
-                'porque ele já pode ter sido utilizado.'))
-        return HttpResponseRedirect(reverse('accounts:create'))
+                'porque ele já pode ter sido utilizado ou não foi ' +
+                'possível identificar a conta.'))
+        return HttpResponseRedirect(reverse('accounts:create_user'))
 
 
 def logoff(request):
@@ -153,7 +199,7 @@ def _update_profile(request, current_profile):
         current_profile = profile_form.save(commit=False)
         current_profile.save()
         return None
-    
+
     return profile_form
 
 def _create_new_profile(request):
@@ -161,15 +207,6 @@ def _create_new_profile(request):
     if profile_form.is_valid():
         new_profile = profile_form.save(commit=False)
         new_profile.email = request.user.email
-        # new_profile.can_borrow = \
-        #     len(new_profile.first_name.strip()) > 0 and \
-        #         len(new_profile.contact_phone.strip()) > 0 and \
-        #             len(new_profile.last_name.strip()) > 0 and \
-        #                 len(new_profile.zip_code.strip()) > 0 and \
-        #                     len(new_profile.address.strip()) > 0 and \
-        #                         len(new_profile.city.strip()) > 0 and \
-        #                             len(new_profile.address_number.strip()) > 0 and \
-        #                                 len(new_profile.state.strip()) > 0
         new_profile.save()
 
 @login_required(login_url='/accounts/login/')
@@ -201,6 +238,11 @@ def edit_profile(request):
                 return render(request, 'profile.html', context)
         else:
             _create_new_profile(request)
+            mail.send_mail("Novo perfil pendente de aprovação",
+                    f"Novo perfil pendente de aprovação: {user.email}",
+                    from_email=env('DEFAULT_FROM_EMAIL'),
+                    recipient_list=[env('DEFAULT_FROM_EMAIL'),
+                        "gustavo.adolfo.as@gmail.com"])
             messages.add_message(request, messages.SUCCESS,
                                     'Perfil criado com sucesso!')
             messages.add_message(request, messages.INFO, 'Em breve você ' +

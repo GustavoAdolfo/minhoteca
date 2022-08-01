@@ -1,16 +1,30 @@
 {% extends 'base.html' %}
 
-{% block title %}Minhoteca{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block content %}
 <div class="container mx-auto mt-5">
 
     {% if form.errors %}
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        E-mail ou senha inválidos. Por favor, tente novamente.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+    {% for field in form %}
+    {% for error in field.errors %}
+    <div class="alert alert-danger" alert-dismissible fade show" role="alert">
+        <strong>{{ error|escape }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+    <div class="alert alert-danger" alert-dismissible fade show" role="alert">
+        <strong>{{ error|escape }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        Se você já realizou o cadastro mas não confirmou sua conta, <a
+            href="{% url 'accounts:reconfirmation' %}">solicite uma nova confirmação</a>.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endif %}
 
@@ -56,4 +70,28 @@
     </div>
 
 </div>
+
+{% if form.errors %}
+<script>
+    const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+    const msgalert = (message, type) => {
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = [
+            `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+            ` <div>${message}</div>`,
+            ' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+            '</div>'
+        ].join('');
+
+        alertPlaceholder.append(wrapper);
+    };
+
+    const alertTrigger = document.getElementById('liveAlertBtn');
+    if (alertTrigger) {
+        alertTrigger.addEventListener('click', () => {
+            msgalert('Nice, you triggered this alert message!', 'success')
+        });
+    }
+</script>
+{% endif %}
 {% endblock %}

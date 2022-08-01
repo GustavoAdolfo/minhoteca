@@ -1,18 +1,84 @@
 {% load static %}
 {% load sass_tags %}
+<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Minhoteca - {% block title %}{% endblock %}</title>
-    <meta name="description" content="">
     <meta name="author" content="Gustavo Adolfo">
     <meta name="keywords" content="">
     <meta name="robots" content="index, follow">
-    <meta name="revisit-after" content="1 day">
+    <meta name="revisit-after" content="7 days" />
+    <meta name="rating" content="14 years" />
     <meta name="language" content="pt-br">
-    <meta name="email" content="contato@minhoteca.com.br">
+    <meta name="email" content="minhoteca@livrosviajantes.com.br" />
+    <meta name="application-name" content="Minhoteca" />
+    <meta name="custodian" content="Gustavo Adolfo Alencar dos Santos" />
+    <meta name="description" content="Catálogo virtual para empréstimo pessoal de livros" />
+    <meta name="keywords"
+        content="livro, biblioteca, empréstimo, literatura, livraria, compartilhamento, sociedade, cultura, educação, lazer" />
+    <meta name="copyright" content="2022 - Gustavo Adolfo Alencar dos Santos" />
+
+    <!-- meta tags Dublin Core -->
+    <link rel="schema.dcterms" href="http://purl.org/dc/terms/" />
+    <meta name="dc.date.modified" content="2019-01-27" />
+    <meta name="dc.date.created" content="2017-01-08" />
+    <meta name="dc.creator.address" content="minhoteca@livrosviajantes.com.br" />
+    <meta name="dc.identifier" content="www.minhoteca.com.br" />
+    <meta name="dc.format" content="text/html" />
+    <meta name="dc.type" content="text;image;video" />
+    <meta name="dc.publisher" content="Minhoteca" />
+    <meta name="dcterms.title" content="Minhoteca" />
+    <meta name="dc.title.alternative" content="Minhoteca" lang="pt-BR" />
+
+    <!-- Social meta tags -->
+    <!-- Google -->
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id"
+        content="703593820097-bnvsdk7gjdaj9es771d3glqh4fqrfjiv.apps.googleusercontent.com" />
+    <meta itemprop="name" content="Minhoteca" />
+    <meta itemprop="description" content="Catálogo virtual para empréstimo pessoal de livros" />
+    <meta itemprop="image" content="{% static 'imgs/favicon-32x32.png'%}" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="{% static 'imgs/favicon-32x32.png'%}" />
+    <meta name="twitter:site" content="@PlataformaLV" />
+    <!-- a página no Twitter do projeto (ainda não há) -->
+    <meta name="twitter:title" content="Minhoteca" />
+    <meta name="twitter:description" content="Catálogo virtual para empréstimo pessoal de livros" />
+    <meta name="twitter:creator" content="@Gu57av0Ad01f0" />
+    <meta name="twitter:image:src" content="{% static 'imgs/favicon-32x32.png'%}" />
+
+    <!-- Open Graph (Facebook) -->
+    <meta property="og:title" content="Minhoteca" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://www.minhoteca.com.br" />
+    <meta property="og:image" content="{% static 'imgs/favicon-32x32.png'%}" />
+    <meta property="og:description" content="Catálogo virtual para empréstimo pessoal de livros" />
+    <meta property="og:site_name" content="Minhoteca" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="article:section" content="LV" />
+    <meta property="article:tag"
+        content="livro, empréstimo, compartilhamento, comunidade, estudo, biblioteca, cultura, lazer, sociedade" />
+    <meta property="article:published_time" content="2018-09-16T00:30:00-00:00" />
+    <meta property="article:modified_time" content="2018-09-16T00:30:00-00:00" />
+    <meta property="fb:app_id" content="" />
+    <meta property="fb:admins" content="" />
+    <meta property="og:image" content="{% static 'imgs/minhoteca_120.png'%}" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="120" />
+    <meta property="og:image:height" content="120" />
+
+    <!-- Links -->
+    <link rel="author" href="https://br.linkedin.com/in/gustavoadolfoas" />
+    <link rel="help" href="<%= BASE_URL %>sobre" />
+    <link rel="icon" href="{% static 'imgs/favicon-16x16.png'%}" type="image/jpeg" sizes="16x16" />
+    <link rel="icon" href="{% static 'imgs/favicon-32x32.png'%}" type="image/png" sizes="32x32" />
+
+    <!-- <script src="https://apis.google.com/js/api:client.js"></script> -->
 
     <!-- Favicons -->
     <!-- <link rel="apple-touch-icon" href="{% static 'imgs/apple-touch-icon.png' %}" sizes="180x180"> -->
@@ -26,8 +92,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-    <link href="{% sass_src 'theme.scss' %}" rel="stylesheet" type="text/css">
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+    <link href="{% static 'theme.css' %}" rel="stylesheet" type="text/css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"
+        integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous">
+    </script>
 </head>
 
 <body>
@@ -76,6 +151,7 @@
                 </div>
             </nav>
             <main id="main-content" class="p-2 flex-grow-1">
+                <div id="liveAlertPlaceholder"></div>
                 {% if messages %}
                 {% for message in messages %}
                 <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
@@ -108,9 +184,6 @@
         </footer>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous">
-    </script>
     <script src="https://kit.fontawesome.com/3cf7c3a500.js" crossorigin="anonymous"></script>
 </body>
 

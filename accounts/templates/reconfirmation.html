@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Solicitar Confirmação de Conta{% endblock %}
+
+{% block content %}
+<form action="{% url 'accounts:reconfirmation' %}" method="post" class="form row p-4">
+    <div class="col col-12">
+        {% csrf_token %}
+        <div class="row mb-4">
+            <div class="col col-8 offset-2">
+                <label for="email" class="form-label">Email de cadastro:</label>
+                <input type="email" name="email" id="email" class="form-control" autofocus
+                    placeholder="seu@email.com.br" required />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-6 text-center">
+                <input type="submit" value="Confirmar" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

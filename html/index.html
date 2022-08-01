@@ -134,4 +134,45 @@
         </aside>
     </div>
 </div>
+
+<div class="modal modal-lg" id="modal-cookies" tabindex="-1" aria-labelledby="modal-cookiesLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3 class="mb-3">Este site utiliza cookies</h3>
+                <p>Este site utiliza cookies bem como outras tecnologias semelhantes apenas para garantir seu
+                    funcionamento essencial, nenhum dado pessoal ou sobre seu equipamento é armazenado ou
+                    compartilhado. </p>
+                <p>Ao selecionar o botão “Aceitar e prosseguir” você está certificando que está ciente desta
+                    política e consente a utilização de cookies e tecnologias semelhantes.</p>
+                <p>Selecionando "Rejeitar" você será redirecionado para fora da área
+                    deste site.</p>
+            </div>
+            <div class="modal-footer">
+                <a href="https://www.google.com">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Rejeitar</button></a>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceitar e prosseguir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const token = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
+    const hideModal = sessionStorage.getItem('modal-cookies');
+    if (hideModal !== token) {
+        const modalOptions = {
+            backdrop: 'static',
+            keyboard: false,
+            show: true
+        };
+        const cookieModal = new bootstrap.Modal(document.getElementById('modal-cookies'), modalOptions);
+        document.getElementById('modal-cookies').addEventListener('hidden.bs.modal', event => {
+            console.log(token);
+            sessionStorage.setItem('modal-cookies', token);
+        });
+        cookieModal.show();
+    }
+</script>
 {% endblock %}

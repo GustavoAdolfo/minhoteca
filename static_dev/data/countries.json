@@ -263,6 +263,7 @@
     {
         "id": 21,
         "name": "Belgium",
+        "pt-br": "Bélgica",
         "isoAlpha2": "BE",
         "isoAlpha3": "BEL",
         "isoNumeric": 56,
@@ -315,6 +316,7 @@
     {
         "id": 25,
         "name": "Bhutan",
+        "pt-br": "Butão",
         "isoAlpha2": "BT",
         "isoAlpha3": "BTN",
         "isoNumeric": 64,
@@ -328,6 +330,7 @@
     {
         "id": 26,
         "name": "Bolivia",
+        "pt-br": "Bolívia",
         "isoAlpha2": "BO",
         "isoAlpha3": "BOL",
         "isoNumeric": 68,
@@ -341,6 +344,7 @@
     {
         "id": 27,
         "name": "Bosnia and Herzegovina",
+        "pt-br": "Bósnia e Herzegovina",
         "isoAlpha2": "BA",
         "isoAlpha3": "BIH",
         "isoNumeric": 70,
@@ -354,6 +358,7 @@
     {
         "id": 28,
         "name": "Botswana",
+        "pt-br": "Botsuana",
         "isoAlpha2": "BW",
         "isoAlpha3": "BWA",
         "isoNumeric": 72,
@@ -407,6 +412,7 @@
     {
         "id": 32,
         "name": "British Virgin Islands",
+        "pt-br": "Ilhas Vírgens Britânicas",
         "isoAlpha2": "VG",
         "isoAlpha3": "VGB",
         "isoNumeric": 92,
@@ -433,6 +439,7 @@
     {
         "id": 34,
         "name": "Bulgaria",
+        "pt-br": "Bulgária",
         "isoAlpha2": "BG",
         "isoAlpha3": "BGR",
         "isoNumeric": 100,
@@ -446,6 +453,7 @@
     {
         "id": 35,
         "name": "Burkina Faso",
+        "pt-br": "Burquina Faso",
         "isoAlpha2": "BF",
         "isoAlpha3": "BFA",
         "isoNumeric": 854,
@@ -459,6 +467,7 @@
     {
         "id": 36,
         "name": "Burundi",
+        "pt-br": "Burundi",
         "isoAlpha2": "BI",
         "isoAlpha3": "BDI",
         "isoNumeric": 108,
@@ -472,6 +481,7 @@
     {
         "id": 37,
         "name": "Cambodia",
+        "pt-br": "Camboja",
         "isoAlpha2": "KH",
         "isoAlpha3": "KHM",
         "isoNumeric": 116,
@@ -485,6 +495,7 @@
     {
         "id": 38,
         "name": "Cameroon",
+        "pt-br": "Camarões",
         "isoAlpha2": "CM",
         "isoAlpha3": "CMR",
         "isoNumeric": 120,
@@ -538,6 +549,7 @@
     {
         "id": 42,
         "name": "Central African Republic",
+        "pt-br": "República Centro Africana",
         "isoAlpha2": "CF",
         "isoAlpha3": "CAF",
         "isoNumeric": 140,
@@ -707,6 +719,7 @@
     {
         "id": 55,
         "name": "Czech Republic",
+        "pt-br": "República Tcheca",
         "isoAlpha2": "CZ",
         "isoAlpha3": "CZE",
         "isoNumeric": 203,
@@ -720,6 +733,7 @@
     {
         "id": 56,
         "name": "Democratic Republic of the Congo",
+        "pt-br": "República Democrática do Congo",
         "isoAlpha2": "CD",
         "isoAlpha3": "COD",
         "isoNumeric": 180,
@@ -733,6 +747,7 @@
     {
         "id": 57,
         "name": "Denmark",
+        "pt-br": "Dinamarca",
         "isoAlpha2": "DK",
         "isoAlpha3": "DNK",
         "isoNumeric": 208,
@@ -772,6 +787,7 @@
     {
         "id": 60,
         "name": "Dominican Republic",
+        "pt-br": "República Dominicana",
         "isoAlpha2": "DO",
         "isoAlpha3": "DOM",
         "isoNumeric": 214,
@@ -1033,6 +1049,7 @@
     {
         "id": 80,
         "name": "Germany",
+        "pt-br": "Alemanha",
         "isoAlpha2": "DE",
         "isoAlpha3": "DEU",
         "isoNumeric": 276,
@@ -1504,6 +1521,7 @@
     {
         "id": 116,
         "name": "Lebanon",
+        "pt-br": "Líbano",
         "isoAlpha2": "LB",
         "isoAlpha3": "LBN",
         "isoNumeric": 422,
@@ -2287,6 +2305,7 @@
     {
         "id": 176,
         "name": "Romania",
+        "pt-br": "Romênia",
         "isoAlpha2": "RO",
         "isoAlpha3": "ROU",
         "isoNumeric": 642,
